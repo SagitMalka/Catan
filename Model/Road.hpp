@@ -2,8 +2,7 @@
 // Created by SAGIT on 14/06/2024.
 //
 
-#ifndef CATAN_ROAD_HPP
-#define CATAN_ROAD_HPP
+#pragma once
 #include "Player.hpp"
 #include "Tile.hpp"
 #include "Node.hpp"
@@ -25,4 +24,3 @@ namespace model {
     };
 }
 
-#endif //CATAN_ROAD_HPP

@@ -8,8 +8,17 @@
 #include <iterator>
 
 using std::array;
+#define RESET   "\033[0m"
+#define RED     "\033[41m"      /* Red background */
+#define GREEN   "\033[42m"      /* Green background */
+#define YELLOW  "\033[43m"      /* Yellow background */
+#define BLUE    "\033[44m"      /* Blue background */
+#define MAGENTA "\033[45m"      /* Magenta background */
+#define CYAN    "\033[46m"      /* Cyan background */
 
 namespace model {
+    std::array<Tile, Board::NUM_TILES> Board::tiles;
+
     std::string insertInMiddle(std::string a, std::string b) {
         int a_length = a.length();
         int b_length = b.length();
@@ -74,14 +83,24 @@ namespace model {
         }
 
     }
-
+    std::string resourceToString(Resource res) {
+        switch (res) {
+            case Resource::Wood:   return "Wood";
+            case Resource::Brick:  return "Brick";
+            case Resource::Sheep:  return "Sheep";
+            case Resource::Wheat:  return "Wheat";
+            case Resource::Ore:    return "Ore";
+            case Resource::Desert: return "Desert";
+            default:               return "Unknown";
+        }
+    }
     ostream &operator<<(ostream &os, const Board &board) {
-
-        os<<"                               |0|--0--|0|                                    "<<std::endl;
+        auto tiles = board.tiles;
+        os<<"                               |0|--0--|1|                                    "<<std::endl;
         os<<"                              /           \\                                  "<<std::endl;
         os<<"                             0      1      0                                  "<<std::endl;
-        os<<"                            /      None     \\                                "<<std::endl;
-        os<<"                  |0|--0--|0|       0       |0|--0--|0|                       "<<std::endl;
+        os<<"                            /      "<<resourceToString(tiles[1].getResourceType())<<"     \\                                "<<std::endl;
+        os<<"                  |2|--0--|3|       0       |4|--0--|0|                       "<<std::endl;
         os<<"                 /           \\              /           \\                   "<<std::endl;
         os<<"                0      2      0            0      3      0                    "<<std::endl;
         os<<"               /      None     \\          /      None     \\                 "<<std::endl;
@@ -108,7 +127,7 @@ namespace model {
         os<<"  |       0       |0|--0--|0|        0       |0|--0--|0|        0        |    "<<std::endl;
         os<<"  \\              /           \\              /           \\              /   "<<std::endl;
         os<<"   0            0     17      0            0     18      0            0       "<<std::endl;
-        os<<"    \\          /      None     \\          /      None    \ \          /     "<<std::endl;
+        os<<"    \\          /      None     \\          /      None    \\          /     "<<std::endl;
         os<<"     |0|--0--|0|       0       |0|--0--|0|        0       |0|--0--|0|         "<<std::endl;
         os<<"                \\              /           \\              /                 "<<std::endl;
         os<<"                 0            0     19      0            0                    "<<std::endl;
