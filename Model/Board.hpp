@@ -51,6 +51,10 @@ namespace model {
 //        bool placeRoad(Player* player, int tileIndex1, int tileIndex2);
 
         void initializeNodeList();
+
+        static std::string getTileResource(int id);
+
+        static int getTileNum(int id);
     };
 
 } // namespace model
