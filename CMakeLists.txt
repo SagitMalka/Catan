@@ -15,4 +15,16 @@ add_executable(Catan main.cpp
         Model/Node.hpp
         Model/Board.cpp
         Model/Board.hpp
+        Model/ResourceCard.cpp
+        Model/ResourceCard.hpp
+        Model/DevelopmentCard.cpp
+        Model/DevelopmentCard.hpp
+        Model/Constants.hpp
+        Model/Card.hpp
+        Model/CardDeck.cpp
+        Model/CardDeck.hpp
+        Model/ResourceCardDeck.cpp
+        Model/ResourceCardDeck.hpp
+        Model/DevelopmentCardDeck.cpp
+        Model/DevelopmentCardDeck.hpp
 )
