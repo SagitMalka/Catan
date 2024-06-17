@@ -7,9 +7,10 @@ namespace model{
     class DevelopmentCardDeck : public CardDeck<DevelopmentCard>{
     public:
         DevelopmentCardDeck();
+        // Public method to reinitialize and shuffle the deck if needed
+        void resetDeck();
     protected:
         void initializeDeck() override;
-
     };
 }
 

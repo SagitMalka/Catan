@@ -31,7 +31,7 @@ namespace model {
 
         // Helper methods
 //        bool isValidSettlementLocation(int tileIndex, Player* player) const;
-//        bool isValidRoadLocation(int tileIndex1, int tileIndex2, Player* player) const;
+        bool isValidRoadLocation(int road_index, Player* player) const;
 //
 
     public:
@@ -51,7 +51,7 @@ namespace model {
 //        bool placeRoad(Player* player, int tileIndex1, int tileIndex2);
 
         void initializeNodeList();
-
+        void initializeRoadsList();
         static std::string getTileResource(int id);
 
         static int getTileNum(int id);

@@ -23,4 +23,9 @@ namespace model{
             deck.emplace_back(Resource::Wheat);
         }
     }
+
+    void ResourceCardDeck::resetDeck() {
+        initializeDeck();
+        shuffleDeck();
+    }
 }

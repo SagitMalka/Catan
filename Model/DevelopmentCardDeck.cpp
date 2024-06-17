@@ -34,4 +34,10 @@ namespace model {
         }
     }
 
+    void DevelopmentCardDeck::resetDeck() {
+        initializeDeck();
+        shuffleDeck();
+    }
+
+
 } // namespace model

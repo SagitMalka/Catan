@@ -27,4 +27,6 @@ add_executable(Catan main.cpp
         Model/ResourceCardDeck.hpp
         Model/DevelopmentCardDeck.cpp
         Model/DevelopmentCardDeck.hpp
+        Model/Game.cpp
+        Model/Game.hpp
 )

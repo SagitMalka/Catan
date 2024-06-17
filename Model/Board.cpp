@@ -211,11 +211,24 @@ namespace model {
 //        return true;
 //    }
 //
-//    bool Board::isValidRoadLocation(int tileIndex1, int tileIndex2, Player* player) const {
-//        // Implement logic to check if the road location is valid
-//        // This might include checking connectivity rules, existing roads, etc.
-//        return true;
-//    }
+    bool Board::isValidRoadLocation(int road_index, Player* player) const {
+        // Implement logic to check if the road location is valid
+        // This might include checking connectivity rules, existing roads, etc.
+
+        Road road = roads[road_index];
+        if(Road::isAvailable(road)){
+            if(road.roadNode(road, 1)){
+
+            }
+        }
+        return true;
+    }
+
+    void Board::initializeRoadsList() {
+        for(int i = 0; i < NUM_ROADS; i++){
+
+        }
+    }
 //
 
 
