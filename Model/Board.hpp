@@ -38,11 +38,12 @@ namespace model {
     public:
         Board();
 
-        [[nodiscard]] array<Tile, 19> getTiles() const;
+        [[nodiscard]] static array<Tile, NUM_TILES> getTiles() ;
 //
 //        // Methods to initialize and manipulate the board
         void initializeBoard();
-
+        static void printTileNodes(int tile_id) ;
+        static void printTileRoads(int tile_id);
         friend ostream &operator<<(ostream &os, const Board &board);
 //        Tile* getTile(int index) const;
 //        Node* getSettlement(int index) const;

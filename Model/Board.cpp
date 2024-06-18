@@ -270,8 +270,38 @@ namespace model {
         }
     }
 
-    array<Tile, 19> Board::getTiles() const {
+    array<Tile, 19> Board::getTiles() {
         return tiles;
+    }
+
+    void Board::printTileNodes(int tile_id) {
+        if (tile_id < 0 || tile_id >= NUM_TILES) {
+            std::cerr << "Invalid tile ID: " << tile_id << std::endl;
+            return;
+        }
+
+        const Tile& tile = tiles[tile_id];
+        const auto& tileNodes = tile.getNodes();
+
+        std::cout << "Nodes for Tile ID " << tile_id << ":" << std::endl;
+        for (const auto& node : tileNodes) {
+            std::cout << "Node ID: " << node->getId() << std::endl;
+        }
+    }
+
+    void Board::printTileRoads(int tile_id) {
+        if (tile_id < 0 || tile_id >= NUM_TILES) {
+            std::cerr << "Invalid tile ID: " << tile_id << std::endl;
+            return;
+        }
+
+        const Tile& tile = tiles[tile_id];
+        const auto& tile_roads = tile.getRoads();
+
+        std::cout << "Roads for Tile ID " << tile_id << ":" << std::endl;
+        for (const auto& road : tile_roads) {
+            std::cout << "Road ID: " << road->getId() << std::endl;
+        }
     }
 
 
