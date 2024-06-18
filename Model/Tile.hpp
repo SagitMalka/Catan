@@ -2,8 +2,9 @@
 
 #include <vector>
 #include <memory>
+#include <array>
 #include "Resource.hpp"
-#include "Node.hpp"
+//#include "Node.hpp"
 #include "Road.hpp"
 
 using std::vector;
@@ -11,7 +12,7 @@ using std::shared_ptr;
 using std::array;
 
 namespace model{
-
+const int NUM_NODES = 6;
     class Tile{
     private:
         int id;
@@ -20,7 +21,7 @@ namespace model{
         vector<shared_ptr<Node>> nodes = {};
         vector<shared_ptr<Road>> roads = {};
 
-//        array<Node*, 6> tile_nodes{};
+        //array<Node*, NUM_NODES> tile_nodes = {};
 //        array<Road*, 6> tile_roads{};
 
     public:

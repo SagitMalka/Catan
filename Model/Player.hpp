@@ -35,8 +35,9 @@ namespace model{
         void addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card);
         void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
         [[nodiscard]] bool hasResoursesForNewSettlement() const;
-        void deductResourcesFoeSettlement();
+        void deductResourcesForSettlement();
         void addSettlement(const shared_ptr<Node>& settlement);
+        bool hasAdjacentRoad(int node_id);
 
     };
 }

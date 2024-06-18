@@ -1,17 +1,14 @@
-//
-// Created by SAGIT on 14/06/2024.
-//
 
 #include "Node.hpp"
 
 namespace model {
 
-    Node::Node(int id) : id(id), owner_id(-1) {}
-    NodeStatus Node::getNodeStatus() const {
+    Node::Node(int id) : id(id) {}
+    NodeStatus Node::getNodeStatus() {
         return node_status;
     }
 
-    void Node::setSettlementType(NodeStatus newType) {
+    void Node::setNodeStatus(NodeStatus newType) {
         node_status = newType;
     }
 
@@ -29,5 +26,13 @@ namespace model {
     void Node::setOwner(int newOwner) {
         owner_id = newOwner;
     }
+
+    bool Node::isOccupied() {
+        if(node_status == NodeStatus::AVAILABLE){
+            return false;
+        }
+        return true;
+    }
+
 
 }

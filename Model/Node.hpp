@@ -1,6 +1,3 @@
-//
-// Created by SAGIT on 14/06/2024.
-//
 
 #pragma once
 //#include "Tile.hpp"
@@ -20,16 +17,17 @@ namespace model {
 
         int id;
         int owner_id;
-        NodeStatus node_status = NodeStatus::AVAILABLE;
+        NodeStatus node_status;
     public:
-        //Node() = default;
+        Node() = default;
         explicit Node(int id);
         [[nodiscard]] int getId() const;
 
         [[nodiscard]] int getOwnerId() const;
-        [[nodiscard]] NodeStatus getNodeStatus() const;
+        [[nodiscard]]  NodeStatus getNodeStatus() ;
 
         void setOwner(int newOwner);
-        void setSettlementType(NodeStatus newType);
+        void setNodeStatus(NodeStatus newType);
+        bool isOccupied() ;
     };
 }

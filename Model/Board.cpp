@@ -5,6 +5,7 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <unordered_set>
 //#include <iterator>
 
 using std::array;
@@ -18,6 +19,8 @@ using std::array;
 
 namespace model {
     std::array<Tile, Board::NUM_TILES> Board::tiles;
+    vector<shared_ptr<Node>> Board::board_nodes;
+    vector<shared_ptr<Road>> Board::roads;
 
     std::string insertInMiddle(std::string a, std::string b) {
         int a_length = int(a.length());
@@ -59,7 +62,7 @@ namespace model {
     int Board::getTileNum(int id) {
        return model::Board::tiles[id].getDicedNumber();
     }
-    ostream &operator<<(ostream &os, const Board &board) {
+    ostream &operator<<(ostream &os, const Board &) {
         std::array<std::string,Board::NUM_TILES> r = {};
         std::array<int,Board::NUM_TILES> ids = {};
         for (int i = 0; i < Board::NUM_TILES; i++) {
@@ -115,27 +118,27 @@ namespace model {
     void Board::initializeNodes() {
         for(int i = 0; i < NUM_NODES; i++){
             auto node = std::make_shared<Node>(i);
-            nodes.push_back(node);
+            board_nodes.push_back(node);
         }
-        tiles[0].addNodes({nodes[0], nodes[1], nodes[4], nodes[9], nodes[8], nodes[3]});
-        tiles[1].addNodes({nodes[2], nodes[3], nodes[8], nodes[14], nodes[13], nodes[7]});
-        tiles[2].addNodes({nodes[4], nodes[5], nodes[10], nodes[16], nodes[15], nodes[9]});
-        tiles[3].addNodes({nodes[6], nodes[7], nodes[13], nodes[19], nodes[18], nodes[12]});
-        tiles[4].addNodes({nodes[8], nodes[9], nodes[15], nodes[21], nodes[20], nodes[14]});
-        tiles[5].addNodes({nodes[10], nodes[11], nodes[17], nodes[23], nodes[22], nodes[16]});
-        tiles[6].addNodes({nodes[13], nodes[14], nodes[20], nodes[26], nodes[25], nodes[19]});
-        tiles[7].addNodes({nodes[15], nodes[16], nodes[22], nodes[28], nodes[27], nodes[21]});
-        tiles[8].addNodes({nodes[18], nodes[19], nodes[25], nodes[31], nodes[30], nodes[24]});
-        tiles[9].addNodes({nodes[20], nodes[21], nodes[27], nodes[33], nodes[32], nodes[26]});
-        tiles[10].addNodes({nodes[22], nodes[23], nodes[29], nodes[35], nodes[34], nodes[28]});
-        tiles[11].addNodes({nodes[25], nodes[26], nodes[32], nodes[38], nodes[37], nodes[31]});
-        tiles[12].addNodes({nodes[27], nodes[28], nodes[34], nodes[40], nodes[39], nodes[33]});
-        tiles[13].addNodes({nodes[30], nodes[31], nodes[37], nodes[43], nodes[42], nodes[36]});
-        tiles[14].addNodes({nodes[32], nodes[33], nodes[39], nodes[45], nodes[44], nodes[38]});
-        tiles[15].addNodes({nodes[34], nodes[35], nodes[41], nodes[47], nodes[46], nodes[40]});
-        tiles[16].addNodes({nodes[37], nodes[38], nodes[44], nodes[49], nodes[48], nodes[43]});
-        tiles[17].addNodes({nodes[39], nodes[40], nodes[46], nodes[51], nodes[50], nodes[45]});
-        tiles[18].addNodes({nodes[44], nodes[45], nodes[50], nodes[53], nodes[52], nodes[49]});
+        tiles[0].addNodes({board_nodes[0], board_nodes[1], board_nodes[4], board_nodes[9], board_nodes[8], board_nodes[3]});
+        tiles[1].addNodes({board_nodes[2], board_nodes[3], board_nodes[8], board_nodes[14], board_nodes[13], board_nodes[7]});
+        tiles[2].addNodes({board_nodes[4], board_nodes[5], board_nodes[10], board_nodes[16], board_nodes[15], board_nodes[9]});
+        tiles[3].addNodes({board_nodes[6], board_nodes[7], board_nodes[13], board_nodes[19], board_nodes[18], board_nodes[12]});
+        tiles[4].addNodes({board_nodes[8], board_nodes[9], board_nodes[15], board_nodes[21], board_nodes[20], board_nodes[14]});
+        tiles[5].addNodes({board_nodes[10], board_nodes[11], board_nodes[17], board_nodes[23], board_nodes[22], board_nodes[16]});
+        tiles[6].addNodes({board_nodes[13], board_nodes[14], board_nodes[20], board_nodes[26], board_nodes[25], board_nodes[19]});
+        tiles[7].addNodes({board_nodes[15], board_nodes[16], board_nodes[22], board_nodes[28], board_nodes[27], board_nodes[21]});
+        tiles[8].addNodes({board_nodes[18], board_nodes[19], board_nodes[25], board_nodes[31], board_nodes[30], board_nodes[24]});
+        tiles[9].addNodes({board_nodes[20], board_nodes[21], board_nodes[27], board_nodes[33], board_nodes[32], board_nodes[26]});
+        tiles[10].addNodes({board_nodes[22], board_nodes[23], board_nodes[29], board_nodes[35], board_nodes[34], board_nodes[28]});
+        tiles[11].addNodes({board_nodes[25], board_nodes[26], board_nodes[32], board_nodes[38], board_nodes[37], board_nodes[31]});
+        tiles[12].addNodes({board_nodes[27], board_nodes[28], board_nodes[34], board_nodes[40], board_nodes[39], board_nodes[33]});
+        tiles[13].addNodes({board_nodes[30], board_nodes[31], board_nodes[37], board_nodes[43], board_nodes[42], board_nodes[36]});
+        tiles[14].addNodes({board_nodes[32], board_nodes[33], board_nodes[39], board_nodes[45], board_nodes[44], board_nodes[38]});
+        tiles[15].addNodes({board_nodes[34], board_nodes[35], board_nodes[41], board_nodes[47], board_nodes[46], board_nodes[40]});
+        tiles[16].addNodes({board_nodes[37], board_nodes[38], board_nodes[44], board_nodes[49], board_nodes[48], board_nodes[43]});
+        tiles[17].addNodes({board_nodes[39], board_nodes[40], board_nodes[46], board_nodes[51], board_nodes[50], board_nodes[45]});
+        tiles[18].addNodes({board_nodes[44], board_nodes[45], board_nodes[50], board_nodes[53], board_nodes[52], board_nodes[49]});
     }
 
     void Board::initializeRoads() {
@@ -232,6 +235,39 @@ namespace model {
         for (const auto& road : tile_roads) {
             std::cout << "Road ID: " << road->getId() << std::endl;
         }
+    }
+
+//    void Board::updateNodeStatus(int node_id, NodeStatus status) {
+//        for (const auto& node : board_nodes) {
+//            if(node->getId() == node_id){
+//                Node::setNodeStatus(status);
+//            }
+//        }
+//    }
+
+    Tile* Board::getTile(int index) {
+        return &tiles[index];
+    }
+
+    shared_ptr<model::Node> Board::getSettlement(int index) {
+        const shared_ptr<Node> node = board_nodes[index];
+        return node;
+    }
+
+    vector<shared_ptr<Node>> Board::getAdjacentNodes(const shared_ptr<Node> &node) {
+        std::unordered_set<std::shared_ptr<Node>> adjacentNodes;
+
+        for (const auto& road : roads) {
+            if (road->getNodeOfRoad(1) == node) {
+                adjacentNodes.insert(road->getNodeOfRoad(2));
+            } else if (road->getNodeOfRoad(2) == node) {
+                adjacentNodes.insert(road->getNodeOfRoad(1));
+            }
+        }
+
+        // Convert unordered_set to vector
+        std::vector<std::shared_ptr<Node>> result(adjacentNodes.begin(), adjacentNodes.end());
+        return result;
     }
 
 

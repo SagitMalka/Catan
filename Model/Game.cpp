@@ -25,7 +25,7 @@ namespace model {
         return players;
     }
 /**
- * 
+ *
  *
  * */
     void Game::startTurn() {
@@ -46,7 +46,22 @@ namespace model {
     }
 
     void Game::buildSettlement(int playerId, int tileId, int nodeId) {
-        // Logic to build a settlement for a player
+        if (canBuildSettlement(playerId, tileId, nodeId)) {
+            // Deduct resources from the player
+            auto player = players[playerId];
+            player->deductResourcesForSettlement();
+
+            // Create and place the settlement
+            //model::Node::setNodeStatus(NodeStatus::SETTLEMENT);
+            auto settlement = model::Board::getSettlement(nodeId);
+            settlement->setNodeStatus(NodeStatus::AVAILABLE);
+            // Update player's settlements
+            player->addSettlement(settlement);
+
+            std::cout << "Settlement built successfully!" << std::endl;
+        } else {
+            std::cerr << "Cannot build settlement at the specified location." << std::endl;
+        }
     }
 
     void Game::buildRoad(int playerId, int tileId, int roadId) {
@@ -75,6 +90,41 @@ namespace model {
 
     void Game::distributeResources(int rollResult) {
         // Logic to distribute resources based on the roll result
+    }
+
+    bool Game::canBuildSettlement(int playerId, int tileId, int nodeId) const {
+        const auto& tile = model::Board::getTile(tileId);
+        const auto& node = model::Board::getSettlement(nodeId);
+
+        // Check if the node is already occupied
+        if (node->isOccupied()) {
+            return false;
+        }
+
+        // Check the proximity rule (no adjacent settlements)
+        for (const auto& adjacentNode : model::Board::getAdjacentNodes((const shared_ptr<model::Node> &) node)) {
+            if (adjacentNode->isOccupied()) {
+                return false;
+            }
+        }
+
+        // Check if the player has enough resources
+        auto player = players[playerId];
+        if (!player->hasResoursesForNewSettlement()) {
+            return false;
+        }
+
+        // Check if the player has an adjacent road (except during initial placement)
+        if (!player->hasAdjacentRoad(nodeId) && !isInitialPlacementPhase()) {
+            return false;
+        }
+
+
+        return true;
+    }
+
+    bool Game::isInitialPlacementPhase() const {
+        return InitialPlacementPhase;
     }
 
 }

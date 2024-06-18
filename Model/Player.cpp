@@ -54,7 +54,7 @@ namespace model{
         return count;
     }
 
-    void Player::deductResourcesFoeSettlement() {
+    void Player::deductResourcesForSettlement() {
         int brick = 1, wood = 1, wheat = 1, sheep = 1;
         for(int i = 0; i < int(resource_cards.size()); i++){
             if(brick && resource_cards[i]->resource_type == Resource::Brick){
@@ -80,6 +80,17 @@ namespace model{
         settlements_cities.push_back(settlement);
         updateScore(1);
         settlement->setOwner(id);
+    }
+
+    bool Player::hasAdjacentRoad(int node_id) {
+        for(auto& road : roads){
+            if(road->getNodeOfRoad(1)->getId() == node_id){
+                return true;
+            } else if(road->getNodeOfRoad(2)->getId() == node_id){
+                return true;
+            }
+        }
+        return false;
     }
 
 

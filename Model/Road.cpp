@@ -38,9 +38,16 @@ namespace model {
         return owner_id;
     }
 
-//    Road::Road(int id, pair<Node*, Node*>* nodes) {
+    std::shared_ptr<Node> Road::getNodeOfRoad(int index) {
+        if(index == 2){
+            return node2;
+        }
+        return node1;
+    }
+
+//    Road::Road(int id, pair<Node*, Node*>* board_nodes) {
 //        this->id = id;
-//        this->road_nodes = &nodes;
+//        this->road_nodes = &board_nodes;
 //    }
 
 

@@ -20,10 +20,11 @@ namespace model {
         int currentPlayerIndex;
         bool gameOver;
         shared_ptr<Player> winner;
-
+        bool InitialPlacementPhase = true;
         // Private helper methods
         void determineWinner();
         void distributeResources(int rollResult);
+        bool canBuildSettlement(int playerId, int tileId, int nodeId) const;
     public:
         Game();
 
@@ -51,6 +52,7 @@ namespace model {
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
 
+        bool isInitialPlacementPhase() const;
     };
 
 }
