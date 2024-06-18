@@ -5,16 +5,16 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
-#include <iterator>
+//#include <iterator>
 
 using std::array;
-#define RESET   "\033[0m"
-#define RED     "\033[41m"      /* Red background */
-#define GREEN   "\033[42m"      /* Green background */
-#define YELLOW  "\033[43m"      /* Yellow background */
-#define BLUE    "\033[44m"      /* Blue background */
-#define MAGENTA "\033[45m"      /* Magenta background */
-#define CYAN    "\033[46m"      /* Cyan background */
+//#define RESET   "\033[0m"
+//#define RED     "\033[41m"      /* Red background */
+//#define GREEN   "\033[42m"      /* Green background */
+//#define YELLOW  "\033[43m"      /* Yellow background */
+//#define BLUE    "\033[44m"      /* Blue background */
+//#define MAGENTA "\033[45m"      /* Magenta background */
+//#define CYAN    "\033[46m"      /* Cyan background */
 
 namespace model {
     std::array<Tile, Board::NUM_TILES> Board::tiles;
@@ -110,76 +110,6 @@ namespace model {
         os<<"                               |52|--71-|53|                                   "<<std::endl;
 
         return os;
-    }
-
-//    Tile* Board::getTile(int index) const {
-//        if (index < 0 || index >= NUM_TILES) {
-//            throw std::out_of_range("Invalid tile index");
-//        }
-//        return const_cast<Tile*>(&tiles[index]);
-//    }
-//
-//    Node* Board::getSettlement(int index) const {
-//        if (index < 0 || index >= NUM_NODES) {
-//            throw std::out_of_range("Invalid settlement index");
-//        }
-//        return const_cast<Node*>(&nodes[index]);
-//    }
-//
-//    Road* Board::getRoad(int index) const {
-//        if (index < 0 || index >= NUM_ROADS) {
-//            throw std::out_of_range("Invalid road index");
-//        }
-//        return const_cast<Road*>(&roads[index]);
-//    }
-//
-//    bool Board::placeSettlement(int tileIndex, Player* player, NodeStatus type) {
-//        if (!isValidSettlementLocation(tileIndex, player)) {
-//            return false;
-//        }
-//        // Find an empty settlement slot
-//        for (Node& settlement : nodes) {
-//            if (settlement.getOwner() == nullptr) {
-//                createNewSettlement(getTile(tileIndex), nullptr, nullptr, player, type);
-////                void createNewNode(Tile *upOrDown, Tile *left, Tile *right, Player *newOwner, NodeStatus type);
-////                void createNewNode(Tile *upOrDown, void *pVoid, void *pVoid1, Player *pPlayer, NodeStatus type)
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    bool Board::placeRoad(Player* player, int tileIndex1, int tileIndex2) {
-//        if (!isValidRoadLocation(tileIndex1, tileIndex2, player)) {
-//            return false;
-//        }
-//        // Find an empty road slot
-//        for (Road& road : roads) {
-//            if (road.getRoadOwner() == nullptr) {
-//                road = Road(player, getTile(tileIndex1), getTile(tileIndex2));
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-//
-//    bool Board::isValidSettlementLocation(int tileIndex, Player* player) const {
-//        // Implement logic to check if the settlement location is valid
-//        // This might include checking adjacency rules, existing nodes, etc.
-//        return true;
-//    }
-//
-    bool Board::isValidRoadLocation(int road_index, Player* player) const {
-        // Implement logic to check if the road location is valid
-        // This might include checking connectivity rules, existing roads, etc.
-
-//        Road road = roads[road_index];
-//        if(Road::isAvailable(road)){
-//            if(road.roadNode(road, 1)){
-//
-//            }
-//        }
-        return true;
     }
 
     void Board::initializeNodes() {

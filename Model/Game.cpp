@@ -1,89 +1,80 @@
 #include "Game.hpp"
 
-using std::string;
-using std::cout;
-using std::endl;
 namespace model {
 
     Game::Game()
-            : currentPlayerIndex(0) {}
+            : currentPlayerIndex(0), gameOver(false), winner(nullptr) {
+        initializeGame();
+    }
 
-    void Game::initializeGame(int numPlayers) {
+    void Game::initializeGame() {
+        // Initialize board, decks, and players
         board.initializeBoard();
-        developmentCardDeck.resetDeck();
         resourceCardDeck.resetDeck();
-        initializePlayers();
-        distributeResources();
+        developmentCardDeck.resetDeck();
+    }
+/**
+ * TO DO:
+ * in controller call addPlayer
+ * */
+    void Game::addPlayer(const std::shared_ptr<Player>& player) {
+        players.push_back(player);
     }
 
-    void Game::initializePlayers() {
-        players.clear();
-        string name;
-        for (int i = 0; i < NUM_OF_PLAYERS; i++) {
-            cout << "Player " << i << "enter your name: " << endl;
-            std::cin >> name;
-            players.emplace_back(name, i); // Assuming Player has a constructor that takes an id
-        }
-    }
-
-    void Game::buildSettlement(int playerId, const Node& location) {
-        // Implementation for building a settlement
-    }
-
-    void Game::buildRoad(int playerId, const Road& road) {
-        // Implementation for building a road
-    }
-
-    void Game::upgradeSettlementToCity(int playerId, const Node& location) {
-        // Implementation for upgrading a settlement to a city
-    }
-
-    void Game::drawDevelopmentCard(int playerId) {
-        if (!developmentCardDeck.isEmpty()) {
-            DevelopmentCard card = developmentCardDeck.drawCard();
-            players[playerId].addDevelopmentCard(card);
-        }
-    }
-
-    void Game::playDevelopmentCard(int playerId, DevelopmentCard card) {
-        // Implementation for playing a development card
-    }
-
-    void Game::tradeResources(int playerId1, Resource resource1, int playerId2, Resource resource2) {
-        // Implementation for trading resources between players
-    }
-
-    int Game::getCurrentPlayerId() const {
-        return players[currentPlayerIndex].getPlayerId();
-    }
-
-    Player Game::getCurrentPlayer() const {
-        return players[currentPlayerIndex];
-    }
-
-    const std::vector<Player>& Game::getPlayers() const {
+    const std::vector<std::shared_ptr<Player>>& Game::getPlayers() const {
         return players;
     }
-
-    const Board& Game::getBoard() const {
-        return board;
+/**
+ * 
+ *
+ * */
+    void Game::startTurn() {
+        // Logic to start a player's turn
     }
 
-    void Game::nextTurn() {
+    void Game::endTurn() {
+        // Logic to end the current player's turn and move to the next player
         currentPlayerIndex = (currentPlayerIndex + 1) % int(players.size());
     }
 
-    bool Game::checkWinCondition() const {
-        for (const Player& player : players) {
-            if (player.getScore() >= 10) { // Assuming 10 points is the win condition
-                return true;
-            }
-        }
-        return false;
+    const std::shared_ptr<Player>& Game::getCurrentPlayer() const {
+        return players[currentPlayerIndex];
     }
 
-    void Game::distributeResources() {
-        // Implementation for distributing resources
+    void Game::rollDice() {
+        // Logic to roll the dice and distribute resources
     }
 
-} // namespace model
+    void Game::buildSettlement(int playerId, int tileId, int nodeId) {
+        // Logic to build a settlement for a player
+    }
+
+    void Game::buildRoad(int playerId, int tileId, int roadId) {
+        // Logic to build a road for a player
+    }
+
+    void Game::tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive) {
+        // Logic to trade resources between players
+    }
+
+    void Game::buyDevelopmentCard(int playerId) {
+        // Logic to allow a player to buy a development card
+    }
+
+    bool Game::isGameOver() const {
+        return gameOver;
+    }
+
+    const std::shared_ptr<Player>& Game::getWinner() const {
+        return winner;
+    }
+
+    void Game::determineWinner() {
+        // Logic to determine the winner based on game rules
+    }
+
+    void Game::distributeResources(int rollResult) {
+        // Logic to distribute resources based on the roll result
+    }
+
+}

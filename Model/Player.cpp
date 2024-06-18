@@ -22,12 +22,64 @@ namespace model{
         return id;
     }
 
-    void Player::addDevelopmentCard(const DevelopmentCard& development_card) {
-        development_cards.emplace_back(development_card);
+    void Player::addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card) {
+        development_cards.push_back(development_card);
     }
 
-    void Player::addResourceCard(const ResourceCard& resource_card) {
-        resource_cards.emplace_back(resource_card);
+    void Player::addResourceCard(const shared_ptr<ResourceCard>& resource_card) {
+        resource_cards.push_back(resource_card);
+    }
+
+    bool Player::hasResoursesForNewSettlement() const {
+        const int requiredBrick = 1;
+        const int requiredWood = 1;
+        const int requiredWheat = 1;
+        const int requiredSheep = 1;
+
+        if (countResource(Resource::Brick) < requiredBrick) return false;
+        if (countResource(Resource::Wood) < requiredWood) return false;
+        if (countResource(Resource::Wheat) < requiredWheat) return false;
+        if (countResource(Resource::Sheep) < requiredSheep) return false;
+
+        return true;
+    }
+
+    int Player::countResource(Resource resource) const {
+        int count = 0;
+        for (const auto& card : resource_cards) {
+            if (card->getResourceType() == resource) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    void Player::deductResourcesFoeSettlement() {
+        int brick = 1, wood = 1, wheat = 1, sheep = 1;
+        for(int i = 0; i < int(resource_cards.size()); i++){
+            if(brick && resource_cards[i]->resource_type == Resource::Brick){
+                resource_cards.erase(resource_cards.begin() + i);
+                brick = 0;
+            } else if (wood && resource_cards[i]->resource_type == Resource::Wood){
+                resource_cards.erase(resource_cards.begin() + i);
+                wood = 0;
+            }else if (wheat && resource_cards[i]->resource_type == Resource::Wheat){
+                resource_cards.erase(resource_cards.begin() + i);
+                wheat = 0;
+            }else if (sheep && resource_cards[i]->resource_type == Resource::Sheep){
+                resource_cards.erase(resource_cards.begin() + i);
+                sheep = 0;
+            }
+        }
+
+    }
+/**
+ * maybe controller should call updateScore & setOwner
+ * */
+    void Player::addSettlement(const shared_ptr<Node> &settlement) {
+        settlements_cities.push_back(settlement);
+        updateScore(1);
+        settlement->setOwner(id);
     }
 
 

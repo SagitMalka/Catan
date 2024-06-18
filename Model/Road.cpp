@@ -2,7 +2,7 @@
 #include "Road.hpp"
 
 namespace model {
-
+    Road::Road(int id) : id(id), owner_id(-1) {}
 //    void Road::createNewRoad(Player *newOwner, Node* node_a, Node* node_b){
 ////        this->owner = newOwner;
 ////        this->settlement_1 = node_a;
@@ -32,7 +32,7 @@ namespace model {
         return id;
     }
 
-    Road::Road(int id) : id(id) {}
+
 
     int Road::getRoadOwnerId() const {
         return owner_id;

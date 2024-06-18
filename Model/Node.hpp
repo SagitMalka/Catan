@@ -4,7 +4,7 @@
 
 #pragma once
 //#include "Tile.hpp"
-#include "Player.hpp"
+//#include "Player.hpp"
 
 namespace model {
     enum class NodeStatus {
@@ -18,23 +18,18 @@ namespace model {
     class Node {
     private:
 
-//        Tile *tile_upOrDown;
-//        Tile *tile_left;
-//        Tile *tile_right;
-
         int id;
         int owner_id;
-        NodeStatus node_type = NodeStatus::AVAILABLE;
+        NodeStatus node_status = NodeStatus::AVAILABLE;
     public:
-        Node() = default;
+        //Node() = default;
         explicit Node(int id);
-        int getId() const;
-        //void createNewNode(Tile *upOrDown, Tile *left, Tile *right, Player *newOwner, NodeStatus type);
+        [[nodiscard]] int getId() const;
 
-        int getOwnerId() const;
-        NodeStatus getSettlementType() const;
+        [[nodiscard]] int getOwnerId() const;
+        [[nodiscard]] NodeStatus getNodeStatus() const;
 
-        void setOwner(Player* newOwner);
+        void setOwner(int newOwner);
         void setSettlementType(NodeStatus newType);
     };
 }

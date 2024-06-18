@@ -6,35 +6,37 @@
 
 #include "DevelopmentCard.hpp"
 #include "ResourceCard.hpp"
-//#include "Road.hpp"
-//#include "Node.hpp"
-#define RESET   "\033[0m"
-#define RED     "\033[41m"      /* Red background */
-#define GREEN   "\033[42m"      /* Green background */
-#define YELLOW  "\033[43m"      /* Yellow background */
-#define BLUE    "\033[44m"      /* Blue background */
-#define MAGENTA "\033[45m"      /* Magenta background */
-#define CYAN    "\033[46m"      /* Cyan background */
+#include "Road.hpp"
+#include "Node.hpp"
+#include <memory>
+
+
 
 using std::vector;
 
+using std::shared_ptr;
 namespace model{
     class Player {
     private:
         int id;
         std::string name;
         int score = 0;
-        vector<DevelopmentCard> development_cards;
-        vector<ResourceCard> resource_cards;
-//        vector<Road> roads;
-//        vector<Node> settlements_cities;
+        vector<shared_ptr<DevelopmentCard>> development_cards;
+        vector<shared_ptr<ResourceCard>> resource_cards;
+        vector<shared_ptr<Road>> roads = {};
+        vector<shared_ptr<Node>> settlements_cities = {};
+
+        int countResource(Resource resource) const;
     public:
         Player(std::string name, int id);
-        int getScore() const;
+        [[nodiscard]] int getScore() const;
         void updateScore(int points);
-        int getPlayerId() const;
-        void addDevelopmentCard(const DevelopmentCard& development_card);
-        void addResourceCard(const ResourceCard& resource_card);
+        [[nodiscard]] int getPlayerId() const;
+        void addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card);
+        void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
+        [[nodiscard]] bool hasResoursesForNewSettlement() const;
+        void deductResourcesFoeSettlement();
+        void addSettlement(const shared_ptr<Node>& settlement);
 
     };
 }

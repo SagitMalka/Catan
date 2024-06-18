@@ -1,51 +1,57 @@
 #pragma once
 
 #include <vector>
-#include <string>
+#include <memory>
 #include "Board.hpp"
 #include "Player.hpp"
-#include "DevelopmentCardDeck.hpp"
 #include "ResourceCardDeck.hpp"
+#include "DevelopmentCardDeck.hpp"
+using std::vector;
+using std::shared_ptr;
 
-#define NUM_OF_PLAYERS 3
 namespace model {
 
     class Game {
+    private:
+        Board board;
+        ResourceCardDeck resourceCardDeck;
+        DevelopmentCardDeck developmentCardDeck;
+        vector<shared_ptr<Player>> players;
+        int currentPlayerIndex;
+        bool gameOver;
+        shared_ptr<Player> winner;
+
+        // Private helper methods
+        void determineWinner();
+        void distributeResources(int rollResult);
     public:
         Game();
 
-        // Initialization methods
-        void initializeGame(int numPlayers);
+        // Game initialization and setup
+        void initializeGame();
 
-        // Player actions
-        void buildSettlement(int playerId, const Node& location);
-        void buildRoad(int playerId, const Road& road);
-        void upgradeSettlementToCity(int playerId, const Node& location);
-        void drawDevelopmentCard(int playerId);
-        void playDevelopmentCard(int playerId, DevelopmentCard card);
-        void tradeResources(int playerId1, Resource resource1, int playerId2, Resource resource2);
+        // Player management
+        void addPlayer(const shared_ptr<Player>& player);
+        [[nodiscard]] const vector<shared_ptr<Player>>& getPlayers() const;
+
+        // Turn management
+        void startTurn();
+        void endTurn();
+        [[nodiscard]] const shared_ptr<Player>& getCurrentPlayer() const;
+
+        // Game actions
+        void rollDice();
+        void buildSettlement(int playerId, int tileId, int nodeId);
+        void buildRoad(int playerId, int tileId, int roadId);
+        void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
+        void buyDevelopmentCard(int playerId);
 
         // Game state queries
-        int getCurrentPlayerId() const;
-        Player getCurrentPlayer() const;
-        const std::vector<Player>& getPlayers() const;
-        const Board& getBoard() const;
+        [[nodiscard]] bool isGameOver() const;
+        [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
-        // Game progression
-        void nextTurn();
-        bool checkWinCondition() const;
 
-    private:
-        Board board;
-        std::vector<Player> players;
-        int currentPlayerIndex;
-        DevelopmentCardDeck developmentCardDeck;
-        ResourceCardDeck resourceCardDeck;
-
-        // Helper methods
-        void distributeResources();
-        void initializePlayers();
     };
 
-} // namespace model
+}
 

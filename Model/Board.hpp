@@ -7,7 +7,8 @@
 #include "Tile.hpp"
 #include "Node.hpp"
 #include "Road.hpp"
-#include "Player.hpp"
+#include "Constants.hpp"
+
 
 using std::vector;
 using std::ostream;
@@ -29,7 +30,7 @@ namespace model {
 
         // Helper methods
 //        bool isValidSettlementLocation(int tileIndex, Player* player) const;
-        bool isValidRoadLocation(int road_index, Player* player) const;
+        //bool isValidRoadLocation(int road_index, Player* player) const;
         static void initializeTiles();
         void initializeNodes();
         void initializeRoads();
