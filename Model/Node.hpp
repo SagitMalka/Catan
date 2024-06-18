@@ -22,15 +22,16 @@ namespace model {
 //        Tile *tile_left;
 //        Tile *tile_right;
 
-        Player *owner;
+        int id;
+        int owner_id;
         NodeStatus node_type = NodeStatus::AVAILABLE;
     public:
         Node() = default;
         explicit Node(int id);
-        int ID;
+        int getId() const;
         //void createNewNode(Tile *upOrDown, Tile *left, Tile *right, Player *newOwner, NodeStatus type);
 
-        Player* getOwner() const;
+        int getOwnerId() const;
         NodeStatus getSettlementType() const;
 
         void setOwner(Player* newOwner);

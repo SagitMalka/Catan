@@ -9,8 +9,7 @@ int main(){
 
     model::Board board;
     std::cout << board << std::endl;
-    std::cout << board << std::endl;
-    int a = 1;
+    //std::cout << board << std::endl;
     return 0;
 }
 

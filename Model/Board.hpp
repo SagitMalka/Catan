@@ -24,19 +24,21 @@ namespace model {
 
         // class members
         static std::array<Tile, NUM_TILES> tiles;
-        std::array<Node, NUM_NODES> nodes;
-        std::array<Road, NUM_ROADS> roads;
-
-
+        vector<shared_ptr<Node>> nodes;
+        vector<shared_ptr<Road>> roads;
 
         // Helper methods
 //        bool isValidSettlementLocation(int tileIndex, Player* player) const;
         bool isValidRoadLocation(int road_index, Player* player) const;
+        static void initializeTiles();
+        void initializeNodes();
+        void initializeRoads();
 //
 
     public:
         Board();
 
+        [[nodiscard]] array<Tile, 19> getTiles() const;
 //
 //        // Methods to initialize and manipulate the board
         void initializeBoard();
@@ -50,8 +52,7 @@ namespace model {
 //        bool placeSettlement(int tileIndex, Player* player, NodeStatus type);
 //        bool placeRoad(Player* player, int tileIndex1, int tileIndex2);
 
-        void initializeNodeList();
-        void initializeRoadsList();
+
         static std::string getTileResource(int id);
 
         static int getTileNum(int id);

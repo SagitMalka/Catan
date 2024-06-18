@@ -6,8 +6,8 @@
 
 #include "DevelopmentCard.hpp"
 #include "ResourceCard.hpp"
-#include "Road.hpp"
-#include "Node.hpp"
+//#include "Road.hpp"
+//#include "Node.hpp"
 #define RESET   "\033[0m"
 #define RED     "\033[41m"      /* Red background */
 #define GREEN   "\033[42m"      /* Green background */
@@ -24,10 +24,10 @@ namespace model{
         int id;
         std::string name;
         int score = 0;
-        vector<DevelopmentCard> development_cards = {};
-        vector<ResourceCard> resource_cards = {};
-        vector<Road> roads = {};
-        vector<Node> settlements_cities = {};
+        vector<DevelopmentCard> development_cards;
+        vector<ResourceCard> resource_cards;
+//        vector<Road> roads;
+//        vector<Node> settlements_cities;
     public:
         Player(std::string name, int id);
         int getScore() const;

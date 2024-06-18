@@ -14,4 +14,7 @@ namespace model{
     const int MAX_SHEEP_CARDS = 19;
     const int MAX_WHEAT_CARDS = 19;
     const int MAX_ORE_CARDS = 19;
+
+    const int NODES_PER_TILE = 6;
+    const int ROADS_PER_TILE = 6;
 }

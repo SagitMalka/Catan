@@ -22,7 +22,7 @@ namespace model {
         for (int i = 0; i < NUM_OF_PLAYERS; i++) {
             cout << "Player " << i << "enter your name: " << endl;
             std::cin >> name;
-            players.emplace_back(name, i); // Assuming Player has a constructor that takes an ID
+            players.emplace_back(name, i); // Assuming Player has a constructor that takes an id
         }
     }
 

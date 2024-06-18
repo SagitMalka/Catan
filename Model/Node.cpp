@@ -26,9 +26,7 @@ namespace model {
 //        return tile_right;
 //    }
 
-    Player *Node::getOwner() const {
-        return owner;
-    }
+
 
     NodeStatus Node::getSettlementType() const {
         return node_type;
@@ -39,10 +37,15 @@ namespace model {
     }
 
     Node::Node(int id) {
-        this->ID = id;
+        this->id = id;
     }
 
-    void Node::setOwner(Player *newOwner) {
-        this->owner = newOwner;
+
+    int Node::getId() const {
+        return id;
+    }
+
+    int Node::getOwnerId() const {
+        return owner_id;
     }
 }
