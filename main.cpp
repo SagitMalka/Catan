@@ -34,7 +34,7 @@ int main(){
     auto plyrs = game.getPlayers();
     cout << "Welcome brave players!" << endl;
     for(auto &p : plyrs){
-        cout << "Player" << p->getId() << ": " << p->getName() << "!" << endl; // TODO learn reinterpret_cast
+        cout << "Player" << p->getId() << ": " << p->getName() << "." << endl; // TODO learn reinterpret_cast
     }
 //    model::Board board;
 //    std::cout << board << std::endl;

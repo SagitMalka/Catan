@@ -15,7 +15,7 @@ namespace model{
             case 2:   this->color= "\033[32m";
             case 3:   this->color= "\033[34m";
             default:
-                this->color= "\033[0m";
+                this->color= "\033[31m";
         }
     }
 
