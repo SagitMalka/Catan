@@ -19,7 +19,7 @@ SRCS = main.cpp \
        Model/CardDeck.cpp \
        Model/ResourceCardDeck.cpp \
        Model/DevelopmentCardDeck.cpp \
-       Model/Game.cpp
+       Controler/Game.cpp
 
 HDRS = Model/Resource.hpp \
        Model/Tile.hpp \
@@ -34,7 +34,7 @@ HDRS = Model/Resource.hpp \
        Model/CardDeck.hpp \
        Model/ResourceCardDeck.hpp \
        Model/DevelopmentCardDeck.hpp \
-       Model/Game.hpp
+       Controler/Game.hpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)

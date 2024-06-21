@@ -36,8 +36,8 @@ int main(){
     for(auto &p : game.getPlayers()){
         cout << "Player" << p->getId() << ": " << p->getName() << "." << endl; // TODO learn reinterpret_cast
     }
-//    model::Board board;
-//    std::cout << board << std::endl;
+   model::Board board;
+   std::cout << board << std::endl;
 //    model::Board::printTileNodes(0);
 //    model::Board::printTileRoads(0);
     //std::cout << board << std::endl;

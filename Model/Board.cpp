@@ -114,6 +114,12 @@ namespace model {
     void Board::initializeNodes() {
         for(int i = 0; i < NUM_NODES; i++){
             auto node = std::make_shared<Node>(i);
+            if(i==1 || i == 23){
+                node->setOwner(1);
+            }
+            if(i==3 || i == 43){
+                node->setOwner(2);
+            }
             board_nodes.push_back(node);
         }
         tiles[0].addNodes({board_nodes[0], board_nodes[1], board_nodes[4], board_nodes[9], board_nodes[8], board_nodes[3]});
