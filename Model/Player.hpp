@@ -8,6 +8,7 @@
 #include "ResourceCard.hpp"
 #include "Road.hpp"
 #include "Node.hpp"
+
 #include <memory>
 
 //#define RESET   "\033[0m"
@@ -27,6 +28,8 @@ namespace model{
         int id;
         std::string name;
         int score = 0;
+        std::string color;
+
         vector<shared_ptr<DevelopmentCard>> development_cards;
         vector<shared_ptr<ResourceCard>> resource_cards;
         vector<shared_ptr<Road>> roads = {};
@@ -35,17 +38,21 @@ namespace model{
         int countResource(Resource resource) const;
     public:
         Player(std::string name, int id);
+
+        // GETTERS
         [[nodiscard]] int getScore() const;
+        [[nodiscard]] int getId() const;
+        std::string getName();
+        string getColor();
+
         void updateScore(int points);
-        [[nodiscard]] int getPlayerId() const;
-        std::string getPlayerName(const Player&);
         void addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card);
         void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
         [[nodiscard]] bool hasResoursesForNewSettlement() const;
         void deductResourcesForSettlement();
         void addSettlement(const shared_ptr<Node>& settlement);
-        bool hasAdjacentRoad(int node_id);
 
+        bool hasAdjacentRoad(int node_id);
     };
 }
 

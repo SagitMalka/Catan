@@ -3,12 +3,21 @@
 //
 
 #include "Player.hpp"
+#include "Constants.hpp"
 
 #include <utility>
 
 namespace model{
 
-    Player::Player(std::string name, int id) : name(std::move(name)), id(id) {}
+    Player::Player(std::string name, int id) : name(std::move(name)), id(id) {
+        switch (id) {
+            case 1:   this->color= "\033[31m";
+            case 2:   this->color= "\033[32m";
+            case 3:   this->color= "\033[34m";
+            default:
+                this->color= "\033[0m";
+        }
+    }
 
     int Player::getScore() const {
         return score;
@@ -18,7 +27,7 @@ namespace model{
         score += points;
     }
 
-    int Player::getPlayerId() const {
+    int Player::getId() const {
         return id;
     }
 
@@ -93,9 +102,20 @@ namespace model{
         return false;
     }
 
-    std::string Player::getPlayerName(const Player&) {
-        return this->name;
+    std::string Player::getName() {
+        if(IS_COLOR)
+        {
+            return this->color + this->name + RESET;
+        }
+        else
+        {
+            return this->name;
+        }
     }
 
+
+    std::string Player::getColor() {
+        return this->color;
+    }
 
 }
