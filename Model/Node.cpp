@@ -35,9 +35,9 @@ namespace model {
 
     std::ostream &operator<<(std::ostream &os, const Node &node) {
         if(IS_COLOR){
-            os << getColorByID(node.owner_id) << node.id << RESET;
+            os << getColorByID(node.owner_id) << "|"<< node.id << "|"<< RESET;
         }else{
-            os << node.id;
+            os << "|"<< node.id<< "|";
         }
         return os;
     }

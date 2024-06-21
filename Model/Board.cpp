@@ -59,11 +59,13 @@ namespace model {
     ostream &operator<<(ostream &os, const Board &) {
         std::array<std::string,Board::NUM_TILES> r = {};
         std::array<int,Board::NUM_TILES> ids = {};
-        std::array<shared_ptr<Node>, 54> n = {};
+        std::array<Node, 54> n = {};
         for (int i = 0; i < Board::NUM_TILES; i++) {
             r[i] = Board::getTileResource(i);
             ids[i] = Board::getTileNum(i);
-            n[i] = Board::board_nodes[i];
+        }
+        for (int i = 0; i < 54; ++i) {
+            n[i] = *Board::board_nodes[i].get();
         }
 
         os<<"                               " << n[0] << "--0--" << n[1] << "                                    "<<std::endl;

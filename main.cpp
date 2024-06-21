@@ -14,17 +14,23 @@ using std::cin;
 void welcome(model::Game &game){
     std::string name;
     cout << "Welcome yo! \n1st player! Enter your name: " << endl;
-    cin >> name;
+//    cin >> name;
+    cout << "Sagit" << endl;
+    name = "Sagit";
     game.addPlayer(name, 1);
     name.clear();
 
     cout << "2nd player: Enter your name" <<endl;
-    cin >> name;
+    cout << "Kfir" << endl;
+    name = "Kfir";
+//    cin >> name;
     game.addPlayer(name, 2);
     name.clear();
 
     cout << "3rd player: Enter your name" <<endl;
-    cin >> name;
+    cout << "Mimi" << endl;
+    name = "Mimi";
+//    cin >> name;
     game.addPlayer(name, 3);
 
 }
