@@ -33,6 +33,7 @@ namespace model {
 
         // Player management
         void addPlayer(const shared_ptr<Player>& player);
+        void addPlayer(std::string name, int id);
         [[nodiscard]] const vector<shared_ptr<Player>>& getPlayers() const;
 
         // Turn management

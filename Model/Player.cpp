@@ -93,5 +93,9 @@ namespace model{
         return false;
     }
 
+    std::string Player::getPlayerName(const Player&) {
+        return this->name;
+    }
+
 
 }

@@ -10,7 +10,13 @@
 #include "Node.hpp"
 #include <memory>
 
-
+//#define RESET   "\033[0m"
+//#define RED     "\033[41m"      /* Red background */
+//#define GREEN   "\033[42m"      /* Green background */
+//#define YELLOW  "\033[43m"      /* Yellow background */
+//#define BLUE    "\033[44m"      /* Blue background */
+//#define MAGENTA "\033[45m"      /* Magenta background */
+//#define CYAN    "\033[46m"      /* Cyan background */
 
 using std::vector;
 
@@ -32,6 +38,7 @@ namespace model{
         [[nodiscard]] int getScore() const;
         void updateScore(int points);
         [[nodiscard]] int getPlayerId() const;
+        std::string getPlayerName(const Player&);
         void addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card);
         void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
         [[nodiscard]] bool hasResoursesForNewSettlement() const;

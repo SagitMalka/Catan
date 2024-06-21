@@ -127,4 +127,9 @@ namespace model {
         return InitialPlacementPhase;
     }
 
+    void Game::addPlayer(const std::string name, int id) {
+        shared_ptr<Player> p = std::make_shared<Player>(name, id);
+        players.push_back(p);
+    }
+
 }
