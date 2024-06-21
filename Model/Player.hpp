@@ -8,7 +8,7 @@
 #include "ResourceCard.hpp"
 #include "Road.hpp"
 #include "Node.hpp"
-
+#include "Constants.hpp"
 #include <memory>
 
 using std::vector;

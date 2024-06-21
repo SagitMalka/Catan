@@ -35,7 +35,7 @@ namespace model{
     #define CYAN    "\033[46m"      /* Cyan background */
 
 
-    std::string getColorByID(int id) {
+    inline std::string getColorByID(int id) {
         switch (id) {
             case 1:
                 return "\033[31m";

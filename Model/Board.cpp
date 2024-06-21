@@ -59,7 +59,7 @@ namespace model {
     ostream &operator<<(ostream &os, const Board &) {
         std::array<std::string,Board::NUM_TILES> r = {};
         std::array<int,Board::NUM_TILES> ids = {};
-        std::array<std::string, 54> n = {};
+        std::array<shared_ptr<Node>, 54> n = {};
         for (int i = 0; i < Board::NUM_TILES; i++) {
             r[i] = Board::getTileResource(i);
             ids[i] = Board::getTileNum(i);
@@ -109,7 +109,7 @@ namespace model {
         os<<"                               " << n[52] << "--71-" << n[53] << "                                   "<<std::endl;
 
         return os;
-            }
+    }
 
     void Board::initializeNodes() {
         for(int i = 0; i < NUM_NODES; i++){
