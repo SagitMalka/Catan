@@ -4,7 +4,7 @@
 #include <string>
 
 #include "Model/Board.hpp"
-#include "Model/Game.hpp"
+#include "Controler/Game.hpp"
 
 
 using std::cout;
@@ -31,9 +31,9 @@ void welcome(model::Game &game){
 int main(){
     model::Game game;
     welcome(game);
-    auto plyrs = game.getPlayers();
+
     cout << "Welcome brave players!" << endl;
-    for(auto &p : plyrs){
+    for(auto &p : game.getPlayers()){
         cout << "Player" << p->getId() << ": " << p->getName() << "." << endl; // TODO learn reinterpret_cast
     }
 //    model::Board board;

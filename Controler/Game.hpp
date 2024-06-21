@@ -2,10 +2,10 @@
 
 #include <vector>
 #include <memory>
-#include "Board.hpp"
-#include "Player.hpp"
-#include "ResourceCardDeck.hpp"
-#include "DevelopmentCardDeck.hpp"
+#include "../Model/Board.hpp"
+#include "../Model/Player.hpp"
+#include "../Model/ResourceCardDeck.hpp"
+#include "../Model/DevelopmentCardDeck.hpp"
 using std::vector;
 using std::shared_ptr;
 
@@ -21,6 +21,7 @@ namespace model {
         bool gameOver;
         shared_ptr<Player> winner;
         bool InitialPlacementPhase = true;
+
         // Private helper methods
         void determineWinner();
         void distributeResources(int rollResult);
