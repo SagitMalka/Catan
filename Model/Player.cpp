@@ -21,7 +21,7 @@ namespace model{
                 this->color= "\033[34m";
                 break;
             default:
-                this->color= "\033[0m";
+                this->color= "\033[31m";
         }
     }
 

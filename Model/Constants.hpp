@@ -25,7 +25,7 @@ namespace model{
     const int ROADS_PER_PLAYER = 20;
 
     //colors
-    const bool IS_COLOR = false;
+    const bool IS_COLOR = true;
     #define RESET   "\033[0m"
     #define RED     "\033[41m"      /* Red background */
     #define GREEN   "\033[42m"      /* Green background */
