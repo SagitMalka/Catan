@@ -1,7 +1,9 @@
 
 #pragma once
-//#include "Tile.hpp"
-//#include "Player.hpp"
+#include <iostream>
+#include "Constants.hpp"
+
+
 
 namespace model {
     enum class NodeStatus {
@@ -29,5 +31,6 @@ namespace model {
         void setOwner(int newOwner);
         void setNodeStatus(NodeStatus newType);
         bool isOccupied() ;
+        friend std::ostream &operator<<(std::ostream &os, const Node &node);
     };
 }

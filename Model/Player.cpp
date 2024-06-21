@@ -10,19 +10,7 @@
 namespace model{
 
     Player::Player(std::string name, int id) : name(std::move(name)), id(id) {
-        switch (id) {
-            case 1:
-                this->color= "\033[31m";
-                break;
-            case 2:
-                this->color= "\033[32m";
-                break;
-            case 3:
-                this->color= "\033[34m";
-                break;
-            default:
-                this->color= "\033[31m";
-        }
+        this->color = getColorByID(id);
     }
 
     int Player::getScore() const {
