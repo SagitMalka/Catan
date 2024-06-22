@@ -47,7 +47,7 @@ namespace model {
         void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
         void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
-        void buyDevelopmentCard(int playerId);
+        int buyDevelopmentCard();
 
         // Game state queries
         [[nodiscard]] bool isGameOver() const;
@@ -60,6 +60,8 @@ namespace model {
 
         static void printAvailableRoads(vector<shared_ptr<Road>>& road_list);
         static void blockAdjNodes(shared_ptr<Node>& node);
+        [[nodiscard]] vector<shared_ptr<Road>> availableRoadsToBuild() const;
+
 
     };
 

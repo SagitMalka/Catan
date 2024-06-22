@@ -22,10 +22,13 @@ namespace model{
         int score = 0;
         std::string color;
 
-        vector<shared_ptr<DevelopmentCard>> development_cards;
+        vector<DevelopmentCard> development_cards;
         vector<shared_ptr<ResourceCard>> resource_cards;
         vector<shared_ptr<Road>> roads = {};
         vector<shared_ptr<Node>> settlements_cities = {};
+
+
+    private:
 
         [[nodiscard]] int countResource(Resource resource) const;
     public:
@@ -38,14 +41,21 @@ namespace model{
         string getColor();
 
         void updateScore(int points);
-        void addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card);
+        void addDevelopmentCard(DevelopmentCard& development_card);
         void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
-        [[nodiscard]] bool hasResoursesForNewSettlement() const;
+
+        [[nodiscard]] bool hasResourcesForNewSettlement() const;
+        [[nodiscard]] bool hasResourcesForDevCard() const;
+        [[nodiscard]] bool hasResourcesForCity() const;
+        [[nodiscard]] bool hasResourcesForRoad() const;
         void deductResourcesForSettlement();
         void addSettlement(const shared_ptr<Node>& settlement);
 
         bool hasAdjacentRoad(int node_id);
         void addRoad(const shared_ptr<Road>& road);
+        vector<shared_ptr<Node>> getPlayerSettlements();
+        const vector<shared_ptr<Road>>& getPlayerRoads() const;
+
     };
 }
 

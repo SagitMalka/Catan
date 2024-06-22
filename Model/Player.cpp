@@ -7,7 +7,7 @@
 
 #include <utility>
 
-namespace model{
+namespace model {
 
     Player::Player(std::string name, int id) : name(std::move(name)), id(id) {
         this->color = getColorByID(id);
@@ -25,15 +25,15 @@ namespace model{
         return id;
     }
 
-    void Player::addDevelopmentCard(const shared_ptr<DevelopmentCard>& development_card) {
+    void Player::addDevelopmentCard(DevelopmentCard &development_card) {
         development_cards.push_back(development_card);
     }
 
-    void Player::addResourceCard(const shared_ptr<ResourceCard>& resource_card) {
+    void Player::addResourceCard(const shared_ptr<ResourceCard> &resource_card) {
         resource_cards.push_back(resource_card);
     }
 
-    bool Player::hasResoursesForNewSettlement() const {
+    bool Player::hasResourcesForNewSettlement() const {
         const int requiredBrick = 1;
         const int requiredWood = 1;
         const int requiredWheat = 1;
@@ -46,10 +46,34 @@ namespace model{
 
         return true;
     }
+    bool Player::hasResourcesForCity() const {
+        const int requiredOre = 3;
+        const int requiredWheat = 2;
 
+        if (countResource(Resource::Ore) < requiredOre) return false;
+        if (countResource(Resource::Wheat) < requiredWheat) return false;
+        return true;
+    }
+    bool Player::hasResourcesForDevCard() const {
+        const int requiredOre = 1;
+        const int requiredSheep = 1;
+        const int requiredWheat = 1;
+
+        if (countResource(Resource::Ore) < requiredOre) return false;
+        if (countResource(Resource::Sheep) < requiredSheep) return false;
+        if (countResource(Resource::Wheat) < requiredWheat) return false;
+        return true;
+    }
+    bool Player::hasResourcesForRoad() const {
+        const int requiredBrick = 1;
+        const int requiredWood = 1;
+        if (countResource(Resource::Brick) < requiredBrick) return false;
+        if (countResource(Resource::Wood) < requiredWood) return false;
+        return true;
+    }
     int Player::countResource(Resource resource) const {
         int count = 0;
-        for (const auto& card : resource_cards) {
+        for (const auto &card: resource_cards) {
             if (card->getResourceType() == resource) {
                 ++count;
             }
@@ -59,23 +83,24 @@ namespace model{
 
     void Player::deductResourcesForSettlement() {
         int brick = 1, wood = 1, wheat = 1, sheep = 1;
-        for(int i = 0; i < int(resource_cards.size()); i++){
-            if(brick && resource_cards[i]->resource_type == Resource::Brick){
+        for (int i = 0; i < int(resource_cards.size()); i++) {
+            if (brick && resource_cards[i]->resource_type == Resource::Brick) {
                 resource_cards.erase(resource_cards.begin() + i);
                 brick = 0;
-            } else if (wood && resource_cards[i]->resource_type == Resource::Wood){
+            } else if (wood && resource_cards[i]->resource_type == Resource::Wood) {
                 resource_cards.erase(resource_cards.begin() + i);
                 wood = 0;
-            }else if (wheat && resource_cards[i]->resource_type == Resource::Wheat){
+            } else if (wheat && resource_cards[i]->resource_type == Resource::Wheat) {
                 resource_cards.erase(resource_cards.begin() + i);
                 wheat = 0;
-            }else if (sheep && resource_cards[i]->resource_type == Resource::Sheep){
+            } else if (sheep && resource_cards[i]->resource_type == Resource::Sheep) {
                 resource_cards.erase(resource_cards.begin() + i);
                 sheep = 0;
             }
         }
 
     }
+
 /**
  * maybe controller should call updateScore & setOwner
  * */
@@ -87,10 +112,10 @@ namespace model{
     }
 
     bool Player::hasAdjacentRoad(int node_id) {
-        for(auto& road : roads){
-            if(road->getNodeOfRoad(1)->getId() == node_id){
+        for (auto &road: roads) {
+            if (road->getNodeOfRoad(1)->getId() == node_id) {
                 return true;
-            } else if(road->getNodeOfRoad(2)->getId() == node_id){
+            } else if (road->getNodeOfRoad(2)->getId() == node_id) {
                 return true;
             }
         }
@@ -98,12 +123,9 @@ namespace model{
     }
 
     std::string Player::getName() {
-        if(IS_COLOR)
-        {
+        if (IS_COLOR) {
             return this->color + this->name + RESET;
-        }
-        else
-        {
+        } else {
             return this->name;
         }
     }
@@ -118,5 +140,20 @@ namespace model{
         this->roads.push_back(road);
 //        TODO check for longest road?
     }
+
+    vector<shared_ptr<Node>> Player::getPlayerSettlements() {
+        vector<shared_ptr<Node>> settlements;
+        for(const auto& s : settlements_cities){
+            if(s->getNodeStatus() == NodeStatus::SETTLEMENT){
+                settlements.push_back(s);
+            }
+        }
+        return settlements;
+    }
+
+    const vector<shared_ptr<Road>>& Player::getPlayerRoads() const {
+        return roads;
+    }
+
 
 }

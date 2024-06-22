@@ -30,16 +30,67 @@ namespace model {
  *
  * */
     void Game::startTurn() {
-//        auto player = getCurrentPlayer();
-//        cout << player->getName() << "'s turn" << endl;
-//        int option = 0;
-//        cout << "What would you like to do?" << endl;
-//        cout << "1) "
-//        cin >> option;
-//        switch (option) {
-//            case 1:
-//
-//        }
+        auto player = getCurrentPlayer();
+        cout << player->getName() << "'s turn" << endl;
+        int option = 0, sub_option = 0;
+        cout << "What would you like to do?" << endl;
+        cout << "1) Build (road/settlement/city)" << endl <<
+                "2) Trade" << endl <<
+                "3) Buy a development card" << endl <<
+                "4) Use a development card" <<endl;
+        cin >> option;
+        vector<shared_ptr<Road>> edges;
+        int new_road;
+        switch (option) {
+            case 1:
+                cout << "Chose: 1) Build road" << endl <<
+                "2) Build settlement" << endl <<
+                "3) Build City" << endl;
+                cin >> sub_option;
+            // TODO create a function that checks where can player build
+                switch (sub_option) {
+                    case 1:  // ROAD
+                        if(player->hasResourcesForRoad()){
+                            cout << "choose your new road" << endl;
+                            edges = availableRoadsToBuild();
+                            printAvailableRoads(edges);
+                            cin >> new_road;
+                            player->addRoad(board.getRoad(new_road));
+                        }
+                        break;
+                    case 2: // SETTLEMENT
+                        if(player->hasResourcesForNewSettlement()){
+                            cout << "choose your new settlement" << endl;
+
+                        }
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+                cout << "choose your new road" << endl;
+                edges = availableRoadsToBuild();
+                printAvailableRoads(edges);
+                cin >> new_road;
+                player->addRoad(board.getRoad(new_road));
+
+                break;
+            case 2:
+                // TODO method to trade
+                break;
+            case 3:
+                //TODO check if player has enough resource cards
+                if(buyDevelopmentCard() != 0){
+                    cout << "Sorry no more development cards or no money" << endl;
+                }
+                break;
+            case 4:
+                //TODO check if it's cards are useful
+                break;
+            default:
+                cout << "can't" << endl;
+        }
 
     }
 
@@ -79,8 +130,19 @@ namespace model {
         // Logic to trade resources between players
     }
 
-    void Game::buyDevelopmentCard(int playerId) {
-        // Logic to allow a player to buy a development card
+    int Game::buyDevelopmentCard() {
+        if(!developmentCardDeck.isEmpty()){
+            auto p = getCurrentPlayer();
+            if(p->hasResourcesForDevCard()){
+                auto dev_card = developmentCardDeck.drawCard();
+                p->addDevelopmentCard(dev_card);
+                cout << "You've got " << dev_card.toString();
+                return 0;
+            } else{
+                return 1;
+            }
+        }
+        return 2;
     }
 
     bool Game::isGameOver() const {
@@ -117,7 +179,7 @@ namespace model {
 
         // Check if the player has enough resources
 //        auto player = players[playerId];
-//        if (!player->hasResoursesForNewSettlement()) {
+//        if (!player->hasResourcesForNewSettlement()) {
 //            return false;
 //        }
 //
@@ -250,6 +312,18 @@ namespace model {
             n->setNodeStatus(NodeStatus::BLOCKED);
         }
 
+    }
+
+    vector<shared_ptr<Road>> Game::availableRoadsToBuild() const {
+        auto p = getCurrentPlayer();
+        vector<shared_ptr<Road>> can_build;
+        for(const auto& node : p->getPlayerSettlements()){
+            auto adj_nodes = model::Board::getAvailableAdjacentRoads(node);
+            for(const auto& n: adj_nodes){
+                can_build.push_back(n);
+            }
+        }
+        return can_build;
     }
 
 

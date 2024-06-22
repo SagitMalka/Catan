@@ -17,9 +17,9 @@ namespace model {
     private:
         CardType type;
     public:
-        DevelopmentCard(CardType card_type);
-        CardType getType() const;
-        string toString() const override;
+        explicit DevelopmentCard(CardType card_type);
+        [[nodiscard]] CardType getType() const;
+        [[nodiscard]] string toString() const override;
 
     };
 }

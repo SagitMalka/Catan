@@ -34,8 +34,7 @@ void welcome(model::Game &game) {
     game.addPlayer(name, 3);
 }
 
-model::Board initBoard(model::Game &game)
-{
+model::Board initBoard(model::Game &game){
     cout << "Welcome brave players!" << endl;
     for (auto &p: game.getPlayers()) {
         cout << "Player" << p->getId() << ": " << p->getName() << "." << endl;
@@ -62,8 +61,9 @@ model::Board initBoard(model::Game &game)
 int main() {
     model::Game game;
     welcome(game);
-    initBoard(game);
-
+    model::Board board =  initBoard(game);
+    game.startTurn();
+    std::cout << board << endl;
 
 
 
