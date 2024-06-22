@@ -29,8 +29,8 @@ namespace model {
         development_cards.push_back(development_card);
     }
 
-    void Player::addResourceCard(const shared_ptr<ResourceCard> &resource_card) {
-        resource_cards.push_back(resource_card);
+    void Player::addResourceCard(const Resource resource) {
+        resource_cards.push_back(std::make_shared<ResourceCard>(resource));
     }
 
     bool Player::hasResourcesForNewSettlement() const {

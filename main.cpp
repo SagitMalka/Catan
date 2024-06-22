@@ -62,7 +62,13 @@ int main() {
     model::Game game;
     welcome(game);
     model::Board board =  initBoard(game);
-    game.startTurn();
+
+    while(true)
+    {
+        game.startTurn();
+        game.endTurn();
+        // TODO return if game finished!
+    }
     std::cout << board << endl;
 
 

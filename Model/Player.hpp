@@ -42,7 +42,7 @@ namespace model{
 
         void updateScore(int points);
         void addDevelopmentCard(DevelopmentCard& development_card);
-        void addResourceCard(const shared_ptr<ResourceCard>& resource_card);
+        void addResourceCard(Resource resource);
 
         [[nodiscard]] bool hasResourcesForNewSettlement() const;
         [[nodiscard]] bool hasResourcesForDevCard() const;

@@ -71,9 +71,9 @@ namespace model {
 
         vector<shared_ptr<Node>> availableSettlementToBuild() const;
 
-        void build(const shared_ptr<Player> &player);
+        void chooseWhatToBuild(const std::shared_ptr<Player> &player);
 
-        bool chooseWhatToBuild(const shared_ptr<Player> &player);
+        bool chooseWhatToDo(const shared_ptr<Player> &player);
     };
 
 }
