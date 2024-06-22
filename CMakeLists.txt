@@ -27,6 +27,19 @@ add_executable(Catan main.cpp
         Model/ResourceCardDeck.hpp
         Model/DevelopmentCardDeck.cpp
         Model/DevelopmentCardDeck.hpp
-        Controler/Game.cpp
-        Controler/Game.hpp
+        Controler/GameController.cpp
+        Controler/GameController.hpp
+        Controler/TurnManagement.cpp
+        Controler/TurnManagement.hpp
+        Controler/GameInit.cpp
+        Controler/GameInit.hpp
+        Controler/PlayerManagement.hpp
+        Controler/GameActions.cpp
+        Controler/GameActions.hpp
+        Controler/GameState.cpp
+        Controler/GameState.hpp
+        Controler/Utils.cpp
+        Controler/Utils.hpp
+        Model/GameState.cpp
+        Model/GameState.hpp
 )

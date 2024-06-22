@@ -35,11 +35,13 @@ namespace model {
         bool isAvailable() const;
         [[nodiscard]] int getRoadOwnerId() const;
         void setOwner(int player_id);
-        std::shared_ptr<Node> getNodeOfRoad(int index);
         friend std::ostream &operator<<(std::ostream &os, const Road &road);
         //Node* roadNode(Road& road, int i);
         bool isConnectedToNode(int node_id);
         void setAdjNodes(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
+
+
+        std::shared_ptr<Node> getNodeOfRoad(int index);
 
     };
 }

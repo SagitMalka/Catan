@@ -334,9 +334,17 @@ namespace model {
         return s;
     }
 
-    shared_ptr<Road> Board::getRoad(int index) const {
-        //auto road = roads[index];
+    shared_ptr<Road> Board::getRoad(int index) {
         return roads[index];
+    }
+
+    const vector<std::shared_ptr<Player>> &Board::getPlayers() {
+        return players;
+    }
+
+    void Board::addPlayer(const std::string &name, int id) {
+        shared_ptr<Player> p = std::make_shared<Player>(name, id);
+        players.push_back(p);
     }
 
     ostream &operator<<(ostream &os, const Board &) {
@@ -405,8 +413,4 @@ namespace model {
 //        }
         return os;
     }
-
-
-
-
 }

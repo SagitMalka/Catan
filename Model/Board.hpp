@@ -7,6 +7,9 @@
 #include "Tile.hpp"
 #include "Node.hpp"
 #include "Road.hpp"
+#include "ResourceCardDeck.hpp"
+#include "DevelopmentCardDeck.hpp"
+#include "Player.hpp"
 //#include "Constants.hpp"
 
 
@@ -23,6 +26,10 @@ namespace model {
         static const int NUM_NODES = 54;
         static const int NUM_ROADS = 72;
 
+        static ResourceCardDeck resourceCardDeck;
+        static DevelopmentCardDeck developmentCardDeck;
+        static vector<shared_ptr<Player>> players;
+        static int currentPlayerIndex;
         // class members
         static std::array<Tile, NUM_TILES> tiles;
         static std::array<shared_ptr<Node>, Board::NUM_NODES> board_nodes;
@@ -44,7 +51,7 @@ namespace model {
         [[nodiscard]] static array<Tile, NUM_TILES> getTiles();
 
 //
-//        // Methods to initialize and manipulate the board
+//        // Methods to initializePlayers and manipulate the board
         static void initializeBoard();
 
         static void printTileNodes(int tile_id);
@@ -56,7 +63,7 @@ namespace model {
         static Tile *getTile(int index);
 
         [[nodiscard]] static shared_ptr<model::Node> getNode(int index);
-        [[nodiscard]] shared_ptr<Road> getRoad(int index) const;
+        [[nodiscard]] static shared_ptr<Road> getRoad(int index);
 //
 
 
@@ -69,6 +76,10 @@ namespace model {
         static vector<shared_ptr<Road>> getAdjacentRoads(const shared_ptr<Node> &node);
         static vector<shared_ptr<Road>> getAvailableAdjacentRoads(const shared_ptr<Node> &node);
         static std::string roadsListToString(vector<shared_ptr<Road>>& roads_list);
+
+        static const vector<std::shared_ptr<Player>> &getPlayers();
+
+        void addPlayer(const string &name, int id);
     };
 
 } // namespace model
