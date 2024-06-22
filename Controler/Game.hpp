@@ -63,6 +63,17 @@ namespace model {
         [[nodiscard]] vector<shared_ptr<Road>> availableRoadsToBuild() const;
 
 
+        void tryBuildRoad(const shared_ptr<Player> &player);
+
+        void tryBuildSettlement(const shared_ptr<Player> &player);
+
+        static void printAvailableNodes(vector<shared_ptr<Node>> &node_list);
+
+        vector<shared_ptr<Node>> availableSettlementToBuild() const;
+
+        void build(const shared_ptr<Player> &player);
+
+        bool chooseWhatToBuild(const shared_ptr<Player> &player);
     };
 
 }

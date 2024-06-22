@@ -29,52 +29,108 @@ namespace model {
  *
  *
  * */
-    void Game::startTurn() {
-        auto player = getCurrentPlayer();
-        cout << player->getName() << "'s turn" << endl;
-        int option = 0, sub_option = 0;
-        cout << "What would you like to do?" << endl;
-        cout << "1) Build (road/settlement/city)" << endl <<
-                "2) Trade" << endl <<
-                "3) Buy a development card" << endl <<
-                "4) Use a development card" <<endl;
-        cin >> option;
+
+    int getUserChoice(size_t  options_size)
+    {
+        int choice = 0;
+
+        while (true) {
+            std::cout << "Enter the number corresponding to your choice: ";
+            std::cin >> choice;
+
+            if (choice > 0 && choice <= options_size) {
+                return choice;
+            } else {
+                std::cout << "Invalid choice. Please select a number between 1 and " << options_size << ".\n";
+            }
+        }
+    }
+
+    void Game::tryBuildRoad(const shared_ptr<Player> &player)
+    {
         vector<shared_ptr<Road>> edges;
-        int new_road;
+        int road_index = -1;
+        if(player->hasResourcesForRoad()){
+            cout << "choose your new road" << endl;
+            edges = availableRoadsToBuild();
+            printAvailableRoads(edges);
+            road_index = getUserChoice(edges.size());
+            player->addRoad(board.getRoad(road_index));
+        }else{
+            cout << "You do not have enough resources."<<endl;
+        }
+    }
+
+    void Game::printAvailableNodes(vector<shared_ptr<Node>> &node_list) {
+        std::cout << "You can build a new settlement in: " << std::endl;
+        for (int i = 0; i < int(node_list.size()); ++i) {
+            std::cout << i + 1 << ") Edge-"<<node_list[i]->getId() << std::endl;
+        }
+    }
+
+    void Game::tryBuildSettlement(const shared_ptr<Player> &player)
+    {
+        if(player->hasResourcesForNewSettlement()){
+            cout << "choose your new settlement" << endl;
+            vector<shared_ptr<Node>> available_nodes = availableSettlementToBuild();
+            int node_index = -1;
+            printAvailableNodes(available_nodes);
+            node_index = getUserChoice(available_nodes.size());;
+            player->addSettlement(Board::getNode(node_index));
+        }else{
+            cout << "You do not have enough resources." <<endl;
+        }
+    }
+    vector<shared_ptr<Node>> Game::availableSettlementToBuild() const {
+        auto p = getCurrentPlayer();
+        vector<shared_ptr<Node>> can_build;
+        for (const auto &road: p->getPlayerRoads()) {
+            for (int i = 1; i < 3; ++i) {
+                auto node_i = road->getNodeOfRoad(i);
+                if (node_i->isAvailable()) {
+                    can_build.push_back(node_i);
+                }
+            }
+        }
+        return can_build;
+    }
+    void Game::build(const std::shared_ptr<Player>& player)
+    {
+        cout << "Chose: 1) Build road" << endl <<
+             "2) Build settlement" << endl <<
+             "3) Build City" << endl <<
+             "4) Finish Turn" << endl;
+
+        int sub_option = getUserChoice(4);
+        // TODO create a function that checks where can player build
+        switch (sub_option) {
+            case 1:  // ROAD
+                tryBuildRoad(player);
+                break;
+            case 2: // SETTLEMENT
+                tryBuildSettlement(player);
+                break;
+            case 3:
+
+                break;
+            default:
+                cout << "Invalid choice. Please select a number between 1 and 3." << endl;
+                break;
+        }
+    }
+
+    bool Game::chooseWhatToBuild(const shared_ptr<Player> &player){
+        int option = 0, sub_option = 0;
+        cout << "1) Build (road/settlement/city)" << endl <<
+             "2) Trade" << endl <<
+             "3) Buy a development card" << endl <<
+             "4) Use a development card" <<endl;
+        option = getUserChoice(4);
+
+        int road_index;
         switch (option) {
             case 1:
-                cout << "Chose: 1) Build road" << endl <<
-                "2) Build settlement" << endl <<
-                "3) Build City" << endl;
-                cin >> sub_option;
-            // TODO create a function that checks where can player build
-                switch (sub_option) {
-                    case 1:  // ROAD
-                        if(player->hasResourcesForRoad()){
-                            cout << "choose your new road" << endl;
-                            edges = availableRoadsToBuild();
-                            printAvailableRoads(edges);
-                            cin >> new_road;
-                            player->addRoad(board.getRoad(new_road));
-                        }
-                        break;
-                    case 2: // SETTLEMENT
-                        if(player->hasResourcesForNewSettlement()){
-                            cout << "choose your new settlement" << endl;
-
-                        }
-                        break;
-                    case 3:
-                        break;
-                    default:
-                        break;
-                }
-                cout << "choose your new road" << endl;
-                edges = availableRoadsToBuild();
-                printAvailableRoads(edges);
-                cin >> new_road;
-                player->addRoad(board.getRoad(new_road));
-
+                build(player);
                 break;
             case 2:
                 // TODO method to trade
@@ -91,8 +147,80 @@ namespace model {
             default:
                 cout << "can't" << endl;
         }
-
     }
+    void Game::startTurn() {
+        auto player = getCurrentPlayer();
+        cout << player->getName() << "'s turn" << endl;
+
+        cout << "What would you like to do?" << endl;
+        bool resume = true;
+        while (resume) {
+            resume = chooseWhatToBuild(player);
+        }
+    }
+//        auto player = getCurrentPlayer();
+//        cout << player->getName() << "'s turn" << endl;
+//        int option = 0, sub_option = 0;
+//        cout << "What would you like to do?" << endl;
+//        cout << "1) Build (road/settlement/city)" << endl <<
+//                "2) Trade" << endl <<
+//                "3) Buy a development card" << endl <<
+//                "4) Use a development card" <<endl;
+//        cin >> option;
+//        vector<shared_ptr<Road>> edges;
+//        int new_road;
+//        switch (option) {
+//            case 1:
+//                cout << "Chose: 1) Build road" << endl <<
+//                "2) Build settlement" << endl <<
+//                "3) Build City" << endl;
+//                cin >> sub_option;
+//            // TODO create a function that checks where can player build
+//                switch (sub_option) {
+//                    case 1:  // ROAD
+//                        if(player->hasResourcesForRoad()){
+//                            cout << "choose your new road" << endl;
+//                            edges = availableRoadsToBuild();
+//                            printAvailableRoads(edges);
+//                            cin >> new_road;
+//                            player->addRoad(board.getRoad(new_road));
+//                        }
+//                        break;
+//                    case 2: // SETTLEMENT
+//                        if(player->hasResourcesForNewSettlement()){
+//                            cout << "choose your new settlement" << endl;
+//
+//                        }
+//                        break;
+//                    case 3:
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                cout << "choose your new road" << endl;
+//                edges = availableRoadsToBuild();
+//                printAvailableRoads(edges);
+//                cin >> new_road;
+//                player->addRoad(board.getRoad(new_road));
+//
+//                break;
+//            case 2:
+//                // TODO method to trade
+//                break;
+//            case 3:
+//                //TODO check if player has enough resource cards
+//                if(buyDevelopmentCard() != 0){
+//                    cout << "Sorry no more development cards or no money" << endl;
+//                }
+//                break;
+//            case 4:
+//                //TODO check if it's cards are useful
+//                break;
+//            default:
+//                cout << "can't" << endl;
+//        }
+//
+//    }
 
     void Game::endTurn() {
         // Logic to end the current player's turn and move to the next player
