@@ -1,6 +1,8 @@
 
 #include "Road.hpp"
 
+#include <utility>
+
 namespace model {
     Road::Road(int id) : id(id), owner_id(-1) {}
 //    void Road::createNewRoad(Player *newOwner, Node* node_a, Node* node_b){
@@ -11,12 +13,12 @@ namespace model {
 //    }
 
 
-    void Road::updateOwner(int player_id) {
+    void Road::setOwner(int player_id) {
         owner_id = player_id;
     }
 
-    bool Road::isAvailable(Road &road){
-        return road.available;
+    bool Road::isAvailable() const{
+        return this->owner_id == -1;
     }
 
 //    Node *Road::roadNode(Road &road, int i) {
@@ -45,6 +47,28 @@ namespace model {
         return node1;
     }
 
+    std::ostream &operator<<(std::ostream &os, const Road &road) {
+        if(IS_COLOR){
+            os << getColorByID(road.owner_id) << road.id << RESET;
+        }else{
+            os <<  road.id;
+        }
+        return os;
+    }
+
+    bool Road::isConnectedToNode(int node_id) {
+        if(this->node1->getId() == node_id){
+            return true;
+        } else if( this->node2->getId() == node_id){
+            return true;
+        }
+        return false;
+    }
+
+    void Road::setAdjNodes(std::shared_ptr<Node> x, std::shared_ptr<Node> y) {
+        this->node1 = std::move(x);
+        this->node2 = std::move(y);
+    }
 //    Road::Road(int id, pair<Node*, Node*>* board_nodes) {
 //        this->id = id;
 //        this->road_nodes = &board_nodes;

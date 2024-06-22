@@ -25,8 +25,8 @@ namespace model {
 
         // class members
         static std::array<Tile, NUM_TILES> tiles;
-        static vector<shared_ptr<Node>> board_nodes;
-        static vector<shared_ptr<Road>> roads;
+        static std::array<shared_ptr<Node>, Board::NUM_NODES> board_nodes;
+        static std::array<shared_ptr<Road>, Board::NUM_ROADS> roads;
 
         // Helper methods
 //        bool isValidSettlementLocation(int tileIndex, Player* player) const;
@@ -56,11 +56,9 @@ namespace model {
         static Tile *getTile(int index);
 
         [[nodiscard]] static shared_ptr<model::Node> getSettlement(int index);
-//        Road* getRoad(int index) const;
+        shared_ptr<Road> getRoad(int index) const;
 //
-//        // Methods to place board_nodes and roads
-//        bool placeSettlement(int tileIndex, Player* player, NodeStatus type);
-//        bool placeRoad(Player* player, int tileIndex1, int tileIndex2);
+
 
         static vector<shared_ptr<Node>> getAdjacentNodes(const shared_ptr<Node> &node);
 
@@ -68,6 +66,9 @@ namespace model {
 
         static int getTileNum(int id);
         //static void updateNodeStatus(int node_id, NodeStatus status);
+        static vector<shared_ptr<Road>> getAdjacentRoads(const shared_ptr<Node> &node);
+        static vector<shared_ptr<Road>> getAvailableAdjacentRoads(const shared_ptr<Node> &node);
+        static std::string roadsListToString(vector<shared_ptr<Road>>& roads_list);
     };
 
 } // namespace model

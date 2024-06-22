@@ -13,8 +13,8 @@ using std::array;
 
 namespace model {
     std::array<Tile, Board::NUM_TILES> Board::tiles;
-    vector<shared_ptr<Node>> Board::board_nodes;
-    vector<shared_ptr<Road>> Board::roads;
+    std::array<shared_ptr<Node>, Board::NUM_NODES> Board::board_nodes;
+    std::array<shared_ptr<Road>, Board::NUM_ROADS> Board::roads;
 
     std::string insertInMiddle(std::string a, std::string b) {
         int a_length = int(a.length());
@@ -56,73 +56,10 @@ namespace model {
     int Board::getTileNum(int id) {
        return model::Board::tiles[id].getDicedNumber();
     }
-    ostream &operator<<(ostream &os, const Board &) {
-        std::array<std::string,Board::NUM_TILES> r = {};
-        std::array<int,Board::NUM_TILES> ids = {};
-        std::array<Node, 54> n = {};
-        for (int i = 0; i < Board::NUM_TILES; i++) {
-            r[i] = Board::getTileResource(i);
-            ids[i] = Board::getTileNum(i);
-        }
-        for (int i = 0; i < 54; ++i) {
-            n[i] = *Board::board_nodes[i].get();
-        }
-
-        os<<"                               " << n[0] << "--0--" << n[1] << "                                    "<<std::endl;
-        os<<"                              /           \\                                  "<<std::endl;
-        os<<"                             1      0      2                                  "<<std::endl;
-        os << "                            /    " << r[0] << "    \\                                " << std::endl;
-        os<<"                  " << n[2] << "--3--" << n[3] << "       "<<ids[0]<<"       " << n[4] << "--4--" << n[5] << "                       "<<std::endl;
-        os<<"                 /           \\              /           \\                   "<<std::endl;
-        os<<"                5      1      6            7      2      8                    "<<std::endl;
-        os<<"               /     " << r[1] << "    \\          /     "<< r[2] <<"    \\                 "<<std::endl;
-        os<<"     " << n[6] << "--9--" << n[7] << "       "<<ids[1]<<"        " << n[8] << "--10-" << n[9] << "        "<<ids[2]<<"      " << n[10] << "--11-" << n[11] << "        "<<std::endl;
-        os<<R"(    /           \              /           \              /           \    )"<<std::endl;
-        os<<"  12      3     13           14      4     15           16      5     17      "<<std::endl;
-        os<<"  /     "<< r[3] <<"    \\          /     "<< r[4] <<"    \\          /     "<< r[5] <<"    \\  "<<std::endl;
-        os<<"" << n[12] << "      "<<ids[3]<<"       " << n[13] << "--18-" << n[14] << "      "<<ids[4]<<"      " << n[15] << "--19-" << n[16] << "     "<<ids[5]<<"       " << n[17] << "    "<<std::endl;
-        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
-        os<<"  20           21      6     22           23      7     24           25       "<<std::endl;
-        os<<"    \\          /     "<< r[6] <<"    \\          /     "<< r[7] <<"    \\          /     "<<std::endl;
-        os<<"    " << n[18] << "--26-" << n[19] << "       "<<ids[6]<<"      " << n[20] << "--27-" << n[21] << "        "<<ids[7]<<"      " << n[22] << "--28-" << n[23] << "         "<<std::endl;
-        os<<R"(    /           \              /           \              /           \    )"<<std::endl;
-        os<<"  29      8     30           31     9     32           33     10     34      "<<std::endl;
-        os<<"  /     "<< r[8] <<"    \\          /     "<< r[9] <<"    \\          /     "<< r[10] <<"    \\  "<<std::endl;
-        os<<"" << n[24] << "      "<<ids[8]<<"       " << n[25] << "--35-" << n[26] << "      "<<ids[9]<<"      " << n[27] << "--36-" << n[28] << "     "<<ids[10]<<"       " << n[29] << "    "<<std::endl;
-        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
-        os<<"  37           38     11     39           40     12     41           42       "<<std::endl;
-        os<<"    \\          /     "<< r[11] <<"    \\          /     "<< r[12] <<"    \\          /     "<<std::endl;
-        os<<"    " << n[30] << "--43-" << n[31] << "       "<<ids[11]<<"      " << n[32] << "-44-" << n[33] << "        "<<ids[12]<<"      " << n[34] << "--45-" << n[35] << "         "<<std::endl;
-        os<<R"(    /           \              /           \              /           \     )"<<std::endl;
-        os<<"  46     13     47           48     14     49           50     15     51      "<<std::endl;
-        os<<"  /     "<< r[13] <<"    \\          /     "<< r[14] <<"    \\          /     "<< r[15] <<"    \\  "<<std::endl;
-        os<<"" << n[36] << "      "<<ids[13]<<"       " << n[37] << "--52-" << n[38] << "      "<<ids[14]<<"      " << n[39] << "--53-" << n[40] << "       "<<ids[15]<<"       " << n[41] << "    "<<std::endl;
-        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
-        os<<"  54           55     16     56           57     17     58           59       "<<std::endl;
-        os<<"    \\          /     "<< r[16] <<"    \\          /     "<< r[17] <<"    \\          /     "<<std::endl;
-        os<<"    " << n[42] << "--60-" << n[43] << "       "<<ids[16]<<"      " << n[44] << "--61-" << n[45] << "     "<<ids[17]<<"      " << n[46] << "--62-" << n[47] << "         "<<std::endl;
-        os<<"                \\              /           \\              /                 "<<std::endl;
-        os<<"                63           64     18     65           66                    "<<std::endl;
-        os<<"                  \\          /     "<< r[18] <<"    \\          /                   "<<std::endl;
-        os<<"                  " << n[48] << "--67-" << n[49] << "      "<<ids[18]<<"       " << n[50] << "--68-" << n[51] << "                       "<<std::endl;
-        os<<"                             \\              /                                "<<std::endl;
-        os<<"                             69           70                                  "<<std::endl;
-        os<<"                               \\          /                                  "<<std::endl;
-        os<<"                               " << n[52] << "--71-" << n[53] << "                                   "<<std::endl;
-
-        return os;
-    }
 
     void Board::initializeNodes() {
         for(int i = 0; i < NUM_NODES; i++){
-            auto node = std::make_shared<Node>(i);
-            if(i==1 || i == 23){
-                node->setOwner(1);
-            }
-            if(i==3 || i == 43){
-                node->setOwner(2);
-            }
-            board_nodes.push_back(node);
+            board_nodes[i] = std::make_shared<Node>(i);;
         }
         tiles[0].addNodes({board_nodes[0], board_nodes[1], board_nodes[4], board_nodes[9], board_nodes[8], board_nodes[3]});
         tiles[1].addNodes({board_nodes[2], board_nodes[3], board_nodes[8], board_nodes[14], board_nodes[13], board_nodes[7]});
@@ -147,9 +84,82 @@ namespace model {
 
     void Board::initializeRoads() {
         for (int i = 0; i < NUM_ROADS; i++) {
-            auto road = std::make_shared<Road>(i);
-            roads.push_back(road);
+            roads[i] = std::make_shared<Road>(i);
         }
+        roads[0]->setAdjNodes(board_nodes[0], board_nodes[1]);
+        roads[1]->setAdjNodes(board_nodes[0], board_nodes[3]);
+        roads[2]->setAdjNodes(board_nodes[0], board_nodes[4]);
+        roads[3]->setAdjNodes(board_nodes[2], board_nodes[3]);
+        roads[4]->setAdjNodes(board_nodes[4], board_nodes[5]);
+        roads[5]->setAdjNodes(board_nodes[2], board_nodes[7]);
+        roads[6]->setAdjNodes(board_nodes[3], board_nodes[10]);
+        roads[7]->setAdjNodes(board_nodes[4], board_nodes[9]);
+        roads[8]->setAdjNodes(board_nodes[5], board_nodes[10]);
+        roads[9]->setAdjNodes(board_nodes[6], board_nodes[7]);
+        roads[10]->setAdjNodes(board_nodes[8], board_nodes[9]);
+        roads[11]->setAdjNodes(board_nodes[10], board_nodes[11]);
+        roads[12]->setAdjNodes(board_nodes[6], board_nodes[12]);
+        roads[13]->setAdjNodes(board_nodes[7], board_nodes[13]);
+        roads[14]->setAdjNodes(board_nodes[8], board_nodes[14]);
+        roads[15]->setAdjNodes(board_nodes[9], board_nodes[15]);
+        roads[16]->setAdjNodes(board_nodes[10], board_nodes[16]);
+        roads[17]->setAdjNodes(board_nodes[11], board_nodes[17]);
+        roads[18]->setAdjNodes(board_nodes[13], board_nodes[14]);
+        roads[19]->setAdjNodes(board_nodes[15], board_nodes[16]);
+        roads[20]->setAdjNodes(board_nodes[12], board_nodes[18]);
+        roads[21]->setAdjNodes(board_nodes[13], board_nodes[19]);
+        roads[22]->setAdjNodes(board_nodes[14], board_nodes[20]);
+        roads[23]->setAdjNodes(board_nodes[15], board_nodes[21]);
+        roads[24]->setAdjNodes(board_nodes[16], board_nodes[22]);
+        roads[25]->setAdjNodes(board_nodes[17], board_nodes[23]);
+        roads[26]->setAdjNodes(board_nodes[18], board_nodes[19]);
+        roads[27]->setAdjNodes(board_nodes[20], board_nodes[21]);
+        roads[28]->setAdjNodes(board_nodes[22], board_nodes[23]);
+        roads[29]->setAdjNodes(board_nodes[18], board_nodes[24]);
+        roads[30]->setAdjNodes(board_nodes[19], board_nodes[25]);
+        roads[31]->setAdjNodes(board_nodes[20], board_nodes[26]);
+        roads[32]->setAdjNodes(board_nodes[21], board_nodes[27]);
+        roads[33]->setAdjNodes(board_nodes[22], board_nodes[28]);
+        roads[34]->setAdjNodes(board_nodes[23], board_nodes[29]);
+        roads[35]->setAdjNodes(board_nodes[25], board_nodes[26]);
+        roads[36]->setAdjNodes(board_nodes[27], board_nodes[28]);
+        roads[37]->setAdjNodes(board_nodes[24], board_nodes[30]);
+        roads[38]->setAdjNodes(board_nodes[25], board_nodes[31]);
+        roads[39]->setAdjNodes(board_nodes[26], board_nodes[32]);
+        roads[40]->setAdjNodes(board_nodes[27], board_nodes[33]);
+        roads[41]->setAdjNodes(board_nodes[28], board_nodes[34]);
+        roads[42]->setAdjNodes(board_nodes[29], board_nodes[35]);
+        roads[43]->setAdjNodes(board_nodes[30], board_nodes[31]);
+        roads[44]->setAdjNodes(board_nodes[32], board_nodes[33]);
+        roads[45]->setAdjNodes(board_nodes[34], board_nodes[35]);
+        roads[46]->setAdjNodes(board_nodes[30], board_nodes[36]);
+        roads[47]->setAdjNodes(board_nodes[31], board_nodes[37]);
+        roads[48]->setAdjNodes(board_nodes[32], board_nodes[38]);
+        roads[49]->setAdjNodes(board_nodes[33], board_nodes[39]);
+        roads[50]->setAdjNodes(board_nodes[34], board_nodes[40]);
+        roads[51]->setAdjNodes(board_nodes[35], board_nodes[41]);
+        roads[52]->setAdjNodes(board_nodes[37], board_nodes[38]);
+        roads[53]->setAdjNodes(board_nodes[39], board_nodes[40]);
+        roads[54]->setAdjNodes(board_nodes[36], board_nodes[42]);
+        roads[55]->setAdjNodes(board_nodes[37], board_nodes[43]);
+        roads[56]->setAdjNodes(board_nodes[38], board_nodes[44]);
+        roads[57]->setAdjNodes(board_nodes[39], board_nodes[45]);
+        roads[58]->setAdjNodes(board_nodes[40], board_nodes[46]);
+        roads[59]->setAdjNodes(board_nodes[41], board_nodes[47]);
+        roads[60]->setAdjNodes(board_nodes[42], board_nodes[43]);
+        roads[61]->setAdjNodes(board_nodes[44], board_nodes[45]);
+        roads[62]->setAdjNodes(board_nodes[46], board_nodes[47]);
+        roads[63]->setAdjNodes(board_nodes[43], board_nodes[48]);
+        roads[64]->setAdjNodes(board_nodes[44], board_nodes[49]);
+        roads[65]->setAdjNodes(board_nodes[45], board_nodes[50]);
+        roads[66]->setAdjNodes(board_nodes[46], board_nodes[51]);
+        roads[67]->setAdjNodes(board_nodes[48], board_nodes[49]);
+        roads[68]->setAdjNodes(board_nodes[50], board_nodes[51]);
+        roads[69]->setAdjNodes(board_nodes[49], board_nodes[52]);
+        roads[70]->setAdjNodes(board_nodes[50], board_nodes[53]);
+        roads[71]->setAdjNodes(board_nodes[52], board_nodes[53]);
+
+
         tiles[0].addRoads({roads[0], roads[2], roads[7], roads[10], roads[6], roads[1]});
         tiles[1].addRoads({roads[3], roads[6], roads[14], roads[18], roads[13], roads[5]});
         tiles[2].addRoads({roads[4], roads[8], roads[16], roads[19], roads[15], roads[7]});
@@ -254,8 +264,8 @@ namespace model {
     }
 
     shared_ptr<model::Node> Board::getSettlement(int index) {
-        const shared_ptr<Node> node = board_nodes[index];
-        return node;
+        //const shared_ptr<Node> node = board_nodes[index];
+        return board_nodes[index];
     }
 
     vector<shared_ptr<Node>> Board::getAdjacentNodes(const shared_ptr<Node> &node) {
@@ -274,9 +284,101 @@ namespace model {
         return result;
     }
 
+    vector<shared_ptr<Road>> Board::getAdjacentRoads(const shared_ptr<Node> &node) {
+        vector<shared_ptr<Road>> adj_roads;
+        for (const auto& road : roads) {
+            if(road->isConnectedToNode(node->getId())){
+                adj_roads.push_back(road);
+            }
+        }
+        return adj_roads;
+    }
+
+    vector<shared_ptr<Road>> Board::getAvailableAdjacentRoads(const shared_ptr<Node> &node) {
+        vector<shared_ptr<Road>> adj_roads;
+        for (const auto& road : roads) {
+            if(road->isConnectedToNode(node->getId()) && road->isAvailable()){
+                adj_roads.push_back(road);
+            }
+        }
+        return adj_roads;
+    }
+    std::string Board::roadsListToString(vector<shared_ptr<Road>> &roads_list) {
+        std::string s;
+        for(const auto& r :  roads_list){
+            s + std::to_string(r->getId());
+            s += " ";
+        }
+        s.pop_back();
+        return s;
+    }
+
+    shared_ptr<Road> Board::getRoad(int index) const {
+        //auto road = roads[index];
+        return roads[index];
+    }
+
+    ostream &operator<<(ostream &os, const Board &) {
+        std::array<std::string,Board::NUM_TILES> r = {};
+        std::array<int,Board::NUM_TILES> ids = {};
+        std::array<Node, 54> n = {};
+        std::array<Road, 72> e = {};
+        for (int i = 0; i < Board::NUM_TILES; i++) {
+            r[i] = Board::getTileResource(i);
+            ids[i] = Board::getTileNum(i);
+        }
+        for (int i = 0; i < Board::NUM_NODES; ++i) {
+            n[i] = *Board::board_nodes[i].get();
+        }
+        for (int i = 0; i < Board::NUM_ROADS; ++i) {
+            e[i] = *Board::roads[i].get();
+        }
+        os<<std::endl<<std::endl<<std::endl<<std::endl<<std::endl<<std::endl;
+        os<<"                               " << n[0] << "--" << e[0] << "--" << n[1] << "                                    "<<std::endl;
+        os<<"                              /           \\                                  "<<std::endl;
+        os<<"                             "<< e[1] <<"      0      "<< e[2] <<"                                  "<<std::endl;
+        os << "                            /    " << r[0] << "    \\                                " << std::endl;
+        os<<"                  " << n[2] << "--" << e[3] << "--" << n[3] << "       "<<ids[0]<<"       " << n[4] << "--" << e[4] << "--" << n[5] << "                       "<<std::endl;
+        os<<"                 /           \\              /           \\                   "<<std::endl;
+        os<<"                "<< e[5] <<"      1      "<< e[6] <<"            "<< e[7] <<"      2      "<< e[8] <<"                    "<<std::endl;
+        os<<"               /     " << r[1] << "    \\          /     "<< r[2] <<"    \\                 "<<std::endl;
+        os<<"     " << n[6] << "--" << e[9] << "--" << n[7] << "       "<<ids[1]<<"        " << n[8] << "--" << e[10] << "-" << n[9] << "        "<<ids[2]<<"      " << n[10] << "--" << e[11] << "-" << n[11] << "        "<<std::endl;
+        os<<R"(    /           \              /           \              /           \    )"<<std::endl;
+        os<<"  "<< e[12] <<"      3     "<< e[13] <<"           "<< e[14] <<"      4     "<< e[15] <<"           "<< e[16] <<"      5     "<< e[17] <<"      "<<std::endl;
+        os<<"  /     "<< r[3] <<"    \\          /     "<< r[4] <<"    \\          /     "<< r[5] <<"    \\  "<<std::endl;
+        os<<"" << n[12] << "      "<<ids[3]<<"       " << n[13] << "--" << e[18] << "-" << n[14] << "      "<<ids[4]<<"      " << n[15] << "--" << e[19] << "-" << n[16] << "     "<<ids[5]<<"       " << n[17] << "    "<<std::endl;
+        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
+        os<<"  "<< e[20] <<"           "<< e[21] <<"      6     "<< e[22] <<"           "<< e[23] <<"      7     "<< e[24] <<"           "<< e[25] <<"       "<<std::endl;
+        os<<"    \\          /     "<< r[6] <<"    \\          /     "<< r[7] <<"    \\          /     "<<std::endl;
+        os<<"    " << n[18] << "--" << e[26] << "-" << n[19] << "       "<<ids[6]<<"      " << n[20] << "--" << e[27] << "-" << n[21] << "        "<<ids[7]<<"      " << n[22] << "--" << e[28] << "-" << n[23] << "         "<<std::endl;
+        os<<R"(    /           \              /           \              /           \    )"<<std::endl;
+        os<<"  "<< e[29] <<"      8     "<< e[30] <<"           "<< e[31] <<"     9     "<< e[32] <<"           "<< e[33] <<"     10     "<< e[34] <<"      "<<std::endl;
+        os<<"  /     "<< r[8] <<"    \\          /     "<< r[9] <<"    \\          /     "<< r[10] <<"    \\  "<<std::endl;
+        os<<"" << n[24] << "      "<<ids[8]<<"       " << n[25] << "--" << e[35] << "-" << n[26] << "      "<<ids[9]<<"      " << n[27] << "--" << e[36] << "-" << n[28] << "     "<<ids[10]<<"       " << n[29] << "    "<<std::endl;
+        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
+        os<<"  "<< e[37] <<"           "<< e[38] <<"     11     "<< e[39] <<"           "<< e[40] <<"     12     "<< e[41] <<"           "<< e[42] <<"       "<<std::endl;
+        os<<"    \\          /     "<< r[11] <<"    \\          /     "<< r[12] <<"    \\          /     "<<std::endl;
+        os<<"    " << n[30] << "--" << e[43] << "-" << n[31] << "       "<<ids[11]<<"      " << n[32] << "-44-" << n[33] << "        "<<ids[12]<<"      " << n[34] << "--" << e[45] << "-" << n[35] << "         "<<std::endl;
+        os<<R"(    /           \              /           \              /           \     )"<<std::endl;
+        os<<"  "<< e[46] <<"     13     "<< e[47] <<"           "<< e[48] <<"     14     "<< e[49] <<"           "<< e[50] <<"     15     "<< e[51] <<"      "<<std::endl;
+        os<<"  /     "<< r[13] <<"    \\          /     "<< r[14] <<"    \\          /     "<< r[15] <<"    \\  "<<std::endl;
+        os<<"" << n[36] << "      "<<ids[13]<<"       " << n[37] << "--" << e[52] << "-" << n[38] << "      "<<ids[14]<<"      " << n[39] << "--" << e[53] << "-" << n[40] << "       "<<ids[15]<<"       " << n[41] << "    "<<std::endl;
+        os<<R"(  \              /           \              /           \              /   )"<<std::endl;
+        os<<"  "<< e[54] <<"           "<< e[55] <<"     16     "<< e[56] <<"           "<< e[57] <<"     17     "<< e[58] <<"           "<< e[59] <<"       "<<std::endl;
+        os<<"    \\          /     "<< r[16] <<"    \\          /     "<< r[17] <<"    \\          /     "<<std::endl;
+        os<<"    " << n[42] << "--" << e[60] << "-" << n[43] << "       "<<ids[16]<<"      " << n[44] << "--" << e[61] << "-" << n[45] << "     "<<ids[17]<<"      " << n[46] << "--" << e[62] << "-" << n[47] << "         "<<std::endl;
+        os<<"                \\              /           \\              /                 "<<std::endl;
+        os<<"                "<< e[63] <<"           "<< e[64] <<"     18     "<< e[65] <<"           "<< e[66] <<"                    "<<std::endl;
+        os<<"                  \\          /     "<< r[18] <<"    \\          /                   "<<std::endl;
+        os<<"                  " << n[48] << "--" << e[67] << "-" << n[49] << "      "<<ids[18]<<"       " << n[50] << "--" << e[68] << "-" << n[51] << "                       "<<std::endl;
+        os<<"                             \\              /                                "<<std::endl;
+        os<<"                             "<< e[69] <<"           "<< e[70] <<"                                  "<<std::endl;
+        os<<"                               \\          /                                  "<<std::endl;
+        os<<"                               " << n[52] << "--" << e[71] << "-" << n[53] << "                                   "<<std::endl;
+
+        return os;
+    }
 
 
-//
 
-
-} // namespace model
+}

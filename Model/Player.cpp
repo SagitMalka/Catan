@@ -81,6 +81,7 @@ namespace model{
  * */
     void Player::addSettlement(const shared_ptr<Node> &settlement) {
         settlements_cities.push_back(settlement);
+        settlement->setNodeStatus(NodeStatus::SETTLEMENT);
         updateScore(1);
         settlement->setOwner(id);
     }
@@ -110,6 +111,10 @@ namespace model{
 
     std::string Player::getColor() {
         return this->color;
+    }
+
+    void Player::addRoad(const shared_ptr<Road> &road) {
+        road->setOwner(this->id);
     }
 
 }

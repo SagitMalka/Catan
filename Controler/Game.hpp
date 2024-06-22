@@ -34,7 +34,7 @@ namespace model {
 
         // Player management
         void addPlayer(const shared_ptr<Player>& player);
-        void addPlayer(std::string name, int id);
+        void addPlayer(const std::string& name, int id);
         [[nodiscard]] const vector<shared_ptr<Player>>& getPlayers() const;
 
         // Turn management
@@ -45,7 +45,7 @@ namespace model {
         // Game actions
         void rollDice();
         void buildSettlement(int playerId, int tileId, int nodeId);
-        void buildRoad(int playerId, int tileId, int roadId);
+        void buildRoad(int roadId);
         void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
         void buyDevelopmentCard(int playerId);
 
@@ -53,8 +53,12 @@ namespace model {
         [[nodiscard]] bool isGameOver() const;
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
-
+        void InitialPlacement(int i);
         bool isInitialPlacementPhase() const;
+        void endOfInitialPlacement();
+        static void buildRoadHelper(int r_indx);
+        static void printAvailableRoads(vector<shared_ptr<Road>>& road_list);
+
     };
 
 }

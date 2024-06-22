@@ -8,6 +8,7 @@
 #include "Node.hpp"
 #include <utility>
 #include <memory>
+#include "Constants.hpp"
 
 using std::pair;
 
@@ -15,8 +16,7 @@ namespace model {
     class Road {
     private:
         int id;
-        bool available = true;
-        int owner_id;
+        int owner_id = -1;
 
         std::shared_ptr<Node> node1;
         std::shared_ptr<Node> node2;
@@ -32,11 +32,14 @@ namespace model {
         //Road(int id, pair<Node*, Node*>* board_nodes);
         [[nodiscard]] int getId() const;
 //        void  createNewRoad(int owner_id, Node* settlement_1,  Node* settlement_2);
-        static bool isAvailable(Road& road) ;
+        bool isAvailable() const;
         [[nodiscard]] int getRoadOwnerId() const;
-        void updateOwner(int player_id);
+        void setOwner(int player_id);
         std::shared_ptr<Node> getNodeOfRoad(int index);
+        friend std::ostream &operator<<(std::ostream &os, const Road &road);
         //Node* roadNode(Road& road, int i);
+        bool isConnectedToNode(int node_id);
+        void setAdjNodes(std::shared_ptr<Node> node1, std::shared_ptr<Node> node2);
 
     };
 }

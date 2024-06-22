@@ -27,7 +27,7 @@ namespace model{
         vector<shared_ptr<Road>> roads = {};
         vector<shared_ptr<Node>> settlements_cities = {};
 
-        int countResource(Resource resource) const;
+        [[nodiscard]] int countResource(Resource resource) const;
     public:
         Player(std::string name, int id);
 
@@ -45,6 +45,7 @@ namespace model{
         void addSettlement(const shared_ptr<Node>& settlement);
 
         bool hasAdjacentRoad(int node_id);
+        void addRoad(const shared_ptr<Road>& road);
     };
 }
 

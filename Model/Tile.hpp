@@ -34,8 +34,8 @@ const int NUM_NODES = 6;
         [[nodiscard]] int getId() const;
         [[nodiscard]] Resource getResourceType() const;
         [[nodiscard]] int getDicedNumber() const;
-        void addNodes(const vector<shared_ptr<Node>> & nodes);
-        void addRoads(const vector<shared_ptr<Road>> & roads);
+        void addNodes(const vector<shared_ptr<Node>> &nodes);
+        void addRoads(const vector<shared_ptr<Road>> &roads);
         [[nodiscard]] const vector<shared_ptr<model::Node>> & getNodes() const;
         [[nodiscard]] const vector<shared_ptr<model::Road>> & getRoads() const;
 
