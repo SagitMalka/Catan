@@ -263,7 +263,7 @@ namespace model {
         return &tiles[index];
     }
 
-    shared_ptr<model::Node> Board::getSettlement(int index) {
+    shared_ptr<model::Node> Board::getNode(int index) {
         //const shared_ptr<Node> node = board_nodes[index];
         return board_nodes[index];
     }
@@ -276,6 +276,27 @@ namespace model {
                 adjacentNodes.insert(road->getNodeOfRoad(2));
             } else if (road->getNodeOfRoad(2) == node) {
                 adjacentNodes.insert(road->getNodeOfRoad(1));
+            }
+        }
+
+        // Convert unordered_set to vector
+        std::vector<std::shared_ptr<Node>> result(adjacentNodes.begin(), adjacentNodes.end());
+        return result;
+    }
+    vector<shared_ptr<Node>> Board::getAvailableAdjacentNodes(const shared_ptr<Node> &node) {
+        std::unordered_set<std::shared_ptr<Node>> adjacentNodes;
+
+        for (const auto& road : roads) {
+            if (road->getNodeOfRoad(1) == node) {
+                auto temp = road->getNodeOfRoad(2);
+                if(!temp->isAvailable()){
+                    adjacentNodes.insert(temp);
+                }
+            } else if (road->getNodeOfRoad(2) == node) {
+                auto temp = road->getNodeOfRoad(1);
+                if(!temp->isAvailable()){
+                    adjacentNodes.insert(temp);
+                }
             }
         }
 
@@ -375,9 +396,16 @@ namespace model {
         os<<"                             "<< e[69] <<"           "<< e[70] <<"                                  "<<std::endl;
         os<<"                               \\          /                                  "<<std::endl;
         os<<"                               " << n[52] << "--" << e[71] << "-" << n[53] << "                                   "<<std::endl;
-
+//        if(DBG)
+//        {
+//            os<<std::endl;
+//            for (auto p: ) {
+//
+//            }
+//        }
         return os;
     }
+
 
 
 

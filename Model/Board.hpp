@@ -55,13 +55,13 @@ namespace model {
 
         static Tile *getTile(int index);
 
-        [[nodiscard]] static shared_ptr<model::Node> getSettlement(int index);
-        shared_ptr<Road> getRoad(int index) const;
+        [[nodiscard]] static shared_ptr<model::Node> getNode(int index);
+        [[nodiscard]] shared_ptr<Road> getRoad(int index) const;
 //
 
 
         static vector<shared_ptr<Node>> getAdjacentNodes(const shared_ptr<Node> &node);
-
+        static vector<shared_ptr<Node>> getAvailableAdjacentNodes(const shared_ptr<Node> &node);
         static std::string getTileResource(int id);
 
         static int getTileNum(int id);

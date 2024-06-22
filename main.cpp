@@ -54,6 +54,7 @@ int main() {
         game.InitialPlacement(i);
     }
     std::cout << board << std::endl;
+    game.endOfInitialPlacement();
 //
 //    game.InitialPlacement();
 //    game.endTurn();

@@ -25,7 +25,7 @@ namespace model {
         // Private helper methods
         void determineWinner();
         void distributeResources(int rollResult);
-        bool canBuildSettlement(int playerId, int tileId, int nodeId) const;
+        [[nodiscard]] bool canBuildSettlement(int playerId, int nodeId) const;
     public:
         Game();
 
@@ -44,7 +44,7 @@ namespace model {
 
         // Game actions
         void rollDice();
-        void buildSettlement(int playerId, int tileId, int nodeId);
+        void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
         void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
         void buyDevelopmentCard(int playerId);
@@ -54,10 +54,11 @@ namespace model {
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
         void InitialPlacement(int i);
-        bool isInitialPlacementPhase() const;
+        [[nodiscard]] bool isInitialPlacementPhase() const;
         void endOfInitialPlacement();
-        static void buildRoadHelper(int r_indx);
+
         static void printAvailableRoads(vector<shared_ptr<Road>>& road_list);
+        static void blockAdjNodes(shared_ptr<Node>& node);
 
     };
 

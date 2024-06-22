@@ -26,11 +26,8 @@ namespace model {
         owner_id = newOwner;
     }
 
-    bool Node::isOccupied() {
-        if (node_status == NodeStatus::AVAILABLE) {
-            return false;
-        }
-        return true;
+    bool Node::isAvailable() {
+        return node_status == NodeStatus::AVAILABLE;
     }
 
     std::ostream &operator<<(std::ostream &os, const Node &node) {

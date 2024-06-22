@@ -19,7 +19,7 @@ namespace model {
 
         int id;
         int owner_id;
-        NodeStatus node_status;
+        NodeStatus node_status = NodeStatus::AVAILABLE;
     public:
         Node() = default;
         explicit Node(int id);
@@ -30,7 +30,7 @@ namespace model {
 
         void setOwner(int newOwner);
         void setNodeStatus(NodeStatus newType);
-        bool isOccupied() ;
+        bool isAvailable() ;
         friend std::ostream &operator<<(std::ostream &os, const Node &node);
     };
 }

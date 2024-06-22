@@ -46,15 +46,15 @@ namespace model {
         // Logic to roll the dice and distribute resources
     }
 
-    void Game::buildSettlement(int playerId, int tileId, int nodeId) {
-        if (canBuildSettlement(playerId, tileId, nodeId)) {
+    void Game::buildSettlement(int playerId, int nodeId) {
+        if (canBuildSettlement(playerId, nodeId)) {
             // Deduct resources from the player
             auto player = players[playerId];
             player->deductResourcesForSettlement();
 
             // Create and place the settlement
             //model::Node::setNodeStatus(NodeStatus::SETTLEMENT);
-            auto settlement = model::Board::getSettlement(nodeId);
+            auto settlement = model::Board::getNode(nodeId);
             settlement->setNodeStatus(NodeStatus::SETTLEMENT);
             // Update player's settlements
             player->addSettlement(settlement);
@@ -94,32 +94,32 @@ namespace model {
         // Logic to distribute resources based on the roll result
     }
 
-    bool Game::canBuildSettlement(int playerId, int tileId, int nodeId) const {
-        const auto& tile = model::Board::getTile(tileId);
-        const auto& node = model::Board::getSettlement(nodeId);
+    bool Game::canBuildSettlement(int playerId, int nodeId) const {
+        //const auto& tile = model::Board::getTile(tileId);
+        const auto& node = model::Board::getNode(nodeId);
 
         // Check if the node is already occupied
-        if (node->isOccupied()) {
+        if (!node->isAvailable()) {
             return false;
         }
 
         // Check the proximity rule (no adjacent settlements)
-        for (const auto& adjacentNode : model::Board::getAdjacentNodes((const shared_ptr<model::Node> &) node)) {
-            if (adjacentNode->isOccupied()) {
-                return false;
-            }
-        }
+//        for (const auto& adjacentNode : model::Board::getAdjacentNodes(node)) {
+//            if (!adjacentNode->isAvailable()) {
+//                return false;
+//            }
+//        }
 
         // Check if the player has enough resources
-        auto player = players[playerId];
-        if (!player->hasResoursesForNewSettlement()) {
-            return false;
-        }
-
-        // Check if the player has an adjacent road (except during initial placement)
-        if (!player->hasAdjacentRoad(nodeId) && !isInitialPlacementPhase()) {
-            return false;
-        }
+//        auto player = players[playerId];
+//        if (!player->hasResoursesForNewSettlement()) {
+//            return false;
+//        }
+//
+//        // Check if the player has an adjacent road (except during initial placement)
+//        if (!player->hasAdjacentRoad(nodeId) && !isInitialPlacementPhase()) {
+//            return false;
+//        }
 
 
         return true;
@@ -141,8 +141,19 @@ namespace model {
         std::cout << "Player: " << p->getName() << " choose a node for your settlement" << std::endl;
         int n;
         std::cin >> n;
+        int a = 1;
+        while (n < 0 || n > 53 || !canBuildSettlement(indx, n)){
+            if (!canBuildSettlement(indx, n)) {
+                cout << "Node " << n << " is occupied or blocked. Try again" << endl;
+            }else{
+                cout << "Invalid choice. Please Enter a number between 0 to 53" << endl;
+            }
+            cin >> n;
+        }
+
         // TODO check is available & distance
-        auto s = model::Board::getSettlement(n);
+        auto s = model::Board::getNode(n);
+        blockAdjNodes(s);
         p->addSettlement(s);
         std::cout << board << std::endl;
         auto adj_roads = model::Board::getAvailableAdjacentRoads(s);
@@ -151,9 +162,7 @@ namespace model {
         std::cout << "You can build a new road in: " << std::endl;
         printAvailableRoads(adj_roads);
 
-//        for (int i = 0; i < int(adj_roads.size()); ++i) {
-//            std::cout << i + 1 << ") Edge-"<<adj_roads[i]->getId() << std::endl;
-//        }
+
         int length = int(adj_roads.size());
         cout << "Please Enter a number between 1 to " << length << endl;
         std::cin >> n;
@@ -162,10 +171,7 @@ namespace model {
             printAvailableRoads(adj_roads);
             std::cin >> n;
         }
-//        if(n < 0 || n > length){
-//            cout << "Invalid choice. Please Enter a number between 1 to " << length << endl;
-//            printAvailableRoads(adj_roads);
-//        }
+
         buildRoad(adj_roads[n-1]->getId());
         std::cout << board << std::endl;
     }
@@ -174,17 +180,20 @@ namespace model {
         InitialPlacementPhase = false;
     }
 
-    void Game::buildRoadHelper(int r_indx) {
-        auto s = model::Board::getSettlement(43);
-        auto adj_roads = model::Board::getAdjacentRoads(s);
-        std::cout << "You can build a new road in: " << model::Board::roadsListToString(adj_roads) << std::endl;
-    }
 
     void Game::printAvailableRoads(vector<shared_ptr<Road>> &road_list) {
         std::cout << "You can build a new road in: " << std::endl;
         for (int i = 0; i < int(road_list.size()); ++i) {
             std::cout << i + 1 << ") Edge-"<<road_list[i]->getId() << std::endl;
         }
+    }
+
+    void Game::blockAdjNodes(shared_ptr<Node>& node) {
+        auto adj_nodes = model::Board::getAdjacentNodes(node);
+        for(const auto& n : adj_nodes){
+            n->setNodeStatus(NodeStatus::BLOCKED);
+        }
+
     }
 
 
