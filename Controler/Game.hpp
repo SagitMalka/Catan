@@ -54,6 +54,7 @@ namespace model {
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
         void InitialPlacement(int i);
+        void FastInitialPlacement();
         [[nodiscard]] bool isInitialPlacementPhase() const;
         void endOfInitialPlacement();
 

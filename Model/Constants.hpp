@@ -22,8 +22,10 @@ namespace model{
     //info for player
     const int SETTLEMENTS_PER_PLAYER = 5;
     const int CITIES_PER_PLAYER = 4;
-    const int ROADS_PER_PLAYER = 20;
 
+    const bool FAST_START = true;
+
+    const int ROADS_PER_PLAYER = 20;
     //colors
     const bool IS_COLOR = true;
     #define RESET   "\033[0m"

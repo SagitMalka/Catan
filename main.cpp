@@ -5,7 +5,7 @@
 
 #include "Model/Board.hpp"
 #include "Controler/Game.hpp"
-
+#include "Model/Constants.hpp"
 
 using std::cout;
 using std::endl;
@@ -32,13 +32,10 @@ void welcome(model::Game &game) {
     name = "Mimi";
 //    cin >> name;
     game.addPlayer(name, 3);
-
 }
 
-int main() {
-    model::Game game;
-    welcome(game);
-
+model::Board initBoard(model::Game &game)
+{
     cout << "Welcome brave players!" << endl;
     for (auto &p: game.getPlayers()) {
         cout << "Player" << p->getId() << ": " << p->getName() << "." << endl;
@@ -47,32 +44,27 @@ int main() {
 
     std::cout << board << std::endl;
 //    model::Game::buildRoadHelper(31);
-    for (int i = 0; i < 3; ++i) {
-        game.InitialPlacement(i);
-    }
-    for (int i = 2; i >= 0; --i) {
-        game.InitialPlacement(i);
+    if(model::FAST_START){
+        game.FastInitialPlacement();
+    }else{
+        for (int i = 0; i < 3; ++i) {
+            game.InitialPlacement(i);
+        }
+        for (int i = 2; i >= 0; --i) {
+            game.InitialPlacement(i);
+        }
     }
     std::cout << board << std::endl;
     game.endOfInitialPlacement();
-//
-//    game.InitialPlacement();
-//    game.endTurn();
-//    std::cout << board << std::endl;
-//
-//    game.InitialPlacement();
-//    game.InitialPlacement();
-//    std::cout << board << std::endl;
-//    game.endTurn();
-//    game.endTurn();
-//
-//    game.InitialPlacement();
-//    game.endTurn();
-//    game.endTurn();
-//    std::cout << board << std::endl;
-//    game.InitialPlacement();
-//    game.endOfInitialPlacement();
-//    std::cout << board << std::endl;
+    return board;
+}
+
+int main() {
+    model::Game game;
+    welcome(game);
+    initBoard(game);
+
+
 
 
 //    model::Board::printTileNodes(0);

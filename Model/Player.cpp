@@ -115,6 +115,8 @@ namespace model{
 
     void Player::addRoad(const shared_ptr<Road> &road) {
         road->setOwner(this->id);
+        this->roads.push_back(road);
+//        TODO check for longest road?
     }
 
 }

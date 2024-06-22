@@ -30,7 +30,17 @@ namespace model {
  *
  * */
     void Game::startTurn() {
-        // Logic to start a player's turn
+//        auto player = getCurrentPlayer();
+//        cout << player->getName() << "'s turn" << endl;
+//        int option = 0;
+//        cout << "What would you like to do?" << endl;
+//        cout << "1) "
+//        cin >> option;
+//        switch (option) {
+//            case 1:
+//
+//        }
+
     }
 
     void Game::endTurn() {
@@ -46,29 +56,24 @@ namespace model {
         // Logic to roll the dice and distribute resources
     }
 
-    void Game::buildSettlement(int playerId, int nodeId) {
-        if (canBuildSettlement(playerId, nodeId)) {
-            // Deduct resources from the player
-            auto player = players[playerId];
-            player->deductResourcesForSettlement();
-
-            // Create and place the settlement
-            //model::Node::setNodeStatus(NodeStatus::SETTLEMENT);
-            auto settlement = model::Board::getNode(nodeId);
-            settlement->setNodeStatus(NodeStatus::SETTLEMENT);
-            // Update player's settlements
-            player->addSettlement(settlement);
-
-            std::cout << "Settlement built successfully!" << std::endl;
-        } else {
-            std::cerr << "Cannot build settlement at the specified location." << std::endl;
-        }
-    }
-
-    void Game::buildRoad(int roadId) {
-        auto p = getCurrentPlayer();
-        p->addRoad(board.getRoad(roadId));
-    }
+//    void Game::buildSettlement(int playerId, int nodeId) {
+//        if (canBuildSettlement(playerId, nodeId)) {
+//            // Deduct resources from the player
+//            auto player = players[playerId];
+//            player->deductResourcesForSettlement();
+//
+//            // Create and place the settlement
+//            //model::Node::setNodeStatus(NodeStatus::SETTLEMENT);
+//            auto settlement = model::Board::getNode(nodeId);
+//            settlement->setNodeStatus(NodeStatus::SETTLEMENT);
+//            // Update player's settlements
+//            player->addSettlement(settlement);
+//
+//            std::cout << "Settlement built successfully!" << std::endl;
+//        } else {
+//            std::cerr << "Cannot build settlement at the specified location." << std::endl;
+//        }
+//    }
 
     void Game::tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive) {
         // Logic to trade resources between players
@@ -134,6 +139,56 @@ namespace model {
         players.push_back(p);
     }
 
+    void Game::FastInitialPlacement(){
+        auto p = players[0];
+        auto s = model::Board::getNode(30);
+        p->addSettlement(s);
+        s = model::Board::getNode(40);
+        p->addSettlement(s);
+        s = model::Board::getNode(25);
+        p->addSettlement(s);
+
+        p->addRoad(board.getRoad(43));
+        p->addRoad(board.getRoad(38));
+        p->addRoad(board.getRoad(53));
+
+
+        p = players[1];
+        s = model::Board::getNode(37);
+        p->addSettlement(s);
+        s = model::Board::getNode(33);
+        p->addSettlement(s);
+
+        p->addRoad(board.getRoad(52));
+        p->addRoad(board.getRoad(49));
+
+
+
+        p = players[2];
+        s = model::Board::getNode(45);
+        p->addSettlement(s);
+        s = model::Board::getNode(52);
+        p->addSettlement(s);
+        s = model::Board::getNode(28);
+        p->addSettlement(s);
+        s = model::Board::getNode(9);
+        p->addSettlement(s);
+        s = model::Board::getNode(16);
+        p->addSettlement(s);
+        s = model::Board::getNode(5);
+        p->addSettlement(s);
+
+        p->addRoad(board.getRoad(4));
+        p->addRoad(board.getRoad(7));
+        p->addRoad(board.getRoad(57));
+        p->addRoad(board.getRoad(61));
+        p->addRoad(board.getRoad(64));
+        p->addRoad(board.getRoad(71));
+
+
+//        buildRoad(adj_roads[n-1]->getId());
+    }
+
     void Game::InitialPlacement(int indx) {
         currentPlayerIndex = indx;
         auto p = players[indx];
@@ -172,7 +227,8 @@ namespace model {
             std::cin >> n;
         }
 
-        buildRoad(adj_roads[n-1]->getId());
+        p->addRoad(board.getRoad(n));
+
         std::cout << board << std::endl;
     }
 
