@@ -3,22 +3,31 @@
 #include <ctime> // for std::time
 #include <string>
 
+
+
 using std::cout, std::cin, std::endl, std::srand, std::string;
 namespace model {
+    std::string ResourceToString(Resource resource) {
+        switch (resource) {
+            case Resource::Wood: return "Wood";
+            case Resource::Brick: return "Brick";
+            case Resource::Sheep: return "Sheep";
+            case Resource::Wheat: return "Wheat";
+            case Resource::Ore: return "Ore";
+            case Resource::Desert: return "Desert";
+            default: return "Unknown Resource";
+        }
+    }
 
     Game::Game()
             : currentPlayerIndex(0), gameOver(false), winner(nullptr) {
         initializeGame();
     }
 
-    void Game::initializeGame() {
+    void Game::initializeGame()  {
         // Initialize board, decks, and players
         model::Board::initializeBoard();
-        resourceCardDecks.emplace_back(Resource::Ore);
-        resourceCardDecks.emplace_back(Resource::Brick);
-        resourceCardDecks.emplace_back(Resource::Wood);
-        resourceCardDecks.emplace_back(Resource::Sheep);
-        resourceCardDecks.emplace_back(Resource::Wheat);
+
         developmentCardDeck.resetDeck();
 
         srand(static_cast<unsigned int>(std::time(nullptr)));
@@ -171,7 +180,9 @@ namespace model {
         auto player = getCurrentPlayer();
         string name = player->getName();
         cout << name << "'s turn" << endl;
+//        player->showCards();
         rollDice(name);
+//        player->showCards();
 
         cout << "What would you like to do?" << endl;
         bool resume = true;
@@ -181,7 +192,6 @@ namespace model {
     }
 
     void Game::endTurn() {
-        // Logic to end the current player's turn and move to the next player
         currentPlayerIndex = (currentPlayerIndex + 1) % int(players.size());
     }
 
@@ -193,8 +203,8 @@ namespace model {
         int roll1 = rand() % 6 + 1;
         int roll2 = rand() % 6 + 1;
         int totalRoll = roll1 + roll2;
-
-        cout << "Player " << name << " rolled a " << totalRoll << endl;
+        cout << endl << "You rolled " << totalRoll << "!" <<endl;
+        DICE();
         if(totalRoll == 7){
             handleRollOfSeven();
         }else{
@@ -210,7 +220,7 @@ namespace model {
     int Game::buyDevelopmentCard() {
         if (!developmentCardDeck.isEmpty()) {
             auto p = getCurrentPlayer();
-            if (p->hasResourcesForDevCard()) {
+            if (p->hasResourcesForCard()) {
                 auto dev_card = developmentCardDeck.drawCard();
                 p->addDevelopmentCard(dev_card);
                 cout << "You've got " << dev_card.toString();
@@ -234,28 +244,43 @@ namespace model {
         // Logic to determine the winner based on game rules
     }
 
-    int getIndexOfResourceInDeck(Resource resource){
-        int index;
-        switch (resource) {
-            case Resource::Ore:
-                return 0;
-            case Resource::Brick:
-                return 1;
+    int Game::getCounter(Resource r) const{
+        switch (r) {
             case Resource::Wood:
-                return 2;
-            case Resource::Sheep:
-                return 3;
+                return resources_cards.at(Resource::Wood);
             case Resource::Wheat:
-                return 4;
+                return resources_cards.at(Resource::Wheat);
+            case Resource::Brick:
+                return resources_cards.at(Resource::Brick);
+            case Resource::Ore:
+                return resources_cards.at(Resource::Ore);
+            case Resource::Sheep:
+                return resources_cards.at(Resource::Sheep);
             default:
-                throw  std::invalid_argument("Unknown resource type");
+                return 0;
         }
     }
 
+    void Game::changeCounter(Resource r, int amount)
+    {
+        switch (r) {
+            case Resource::Wood:
+                resources_cards[Resource::Wood] += amount;
+            case Resource::Wheat:
+                resources_cards[Resource::Wheat] += amount;
+            case Resource::Brick:
+                resources_cards[Resource::Brick] += amount;
+            case Resource::Ore:
+                resources_cards[Resource::Ore] += amount;
+            case Resource::Sheep:
+                resources_cards[Resource::Sheep] += amount;
+            default:
+                return;
+        }
+    }
     void Game::distributeResources(int rollResult) {
         std::cout << "Distributing resources for roll: " << rollResult << std::endl;
 
-        // Iterate over each tile and distribute resources if the roll matches the tile's number
         for (const auto& tile : model::Board::getTiles()) {
             if (tile.getDicedNumber() == rollResult) {
                 for (const auto& node : tile.getNodes()) {
@@ -263,49 +288,28 @@ namespace model {
                         int ownerId = node->getOwnerId();
                         auto owner = players[ownerId -1];
                         auto resource_card_type = tile.getResourceType();
-                        int indx = getIndexOfResourceInDeck(resource_card_type);
-                        if(resourceCardDecks[indx].isEmpty()){
-                            throw std::out_of_range("no more cards on deck");
-                        }
 
-                        shared_ptr<ResourceCard> resource_card = resourceCardDecks[indx].drawCard();
-                        owner->addResourceCard(resource_card);
-                        std::cout << "Player " << owner->getName() << " receives "
-                                  << resource_card->toString() << " from tile " << tile.getId() << std::endl;
+                        if(getCounter(resource_card_type) == 0) throw std::out_of_range("no more cards on deck");
+
+                        int card_num = node->getNodeStatus() == NodeStatus::SETTLEMENT ? 1 : 2;
+                        owner->addResourceCard(resource_card_type, card_num);
+                        changeCounter(resource_card_type, -card_num);
+
+                        std::cout << "Player " << owner->getName()
+                        << " receives " << model::ResourceToString(resource_card_type)
+                        << " from tile " << tile.getId() << std::endl;
                     }
                 }
             }
         }
     }
 
-    bool Game::canBuildSettlement(int playerId, int nodeId) const {
-        //const auto& tile = model::Board::getTile(tileId);
+    bool Game::canBuildSettlement(int playerId, int nodeId) {
         const auto &node = model::Board::getNode(nodeId);
 
-        // Check if the node is already occupied
         if (!node->isAvailable()) {
             return false;
         }
-
-        // Check the proximity rule (no adjacent settlements)
-//        for (const auto& adjacentNode : model::Board::getAdjacentNodes(node)) {
-//            if (!adjacentNode->isAvailable()) {
-//                return false;
-//            }
-//        }
-
-        // Check if the player has enough resources
-//        auto player = players[playerId];
-//        if (!player->hasResourcesForNewSettlement()) {
-//            return false;
-//        }
-//
-//        // Check if the player has an adjacent road (except during initial placement)
-//        if (!player->hasAdjacentRoad(nodeId) && !isInitialPlacementPhase()) {
-//            return false;
-//        }
-
-
         return true;
     }
 
@@ -469,30 +473,24 @@ namespace model {
     }
 
     void Game::handleRollOfSeven() {
-        std::cout << "Handling roll of 7: players with more than 7 resource cards must return half to the stock." << std::endl;
-
+//        std::cout << "Handling roll of 7: players with more than 7 resource cards must return half to the stock." << std::endl;
+        std::cout << "Oh no! The ROBBER strikes! Everyone with more than 7 cards, prepare to pay the toll." << std::endl;
+        ROBBER();
         for (const auto& player : players) {
             int numResourceCards = player->getTotalResourceCards();
             if (numResourceCards > 7) {
                 int numCardsToReturn = numResourceCards / 2;
-                player->returnResourceCards(numCardsToReturn, -1);
+                std::map<Resource, int> giveUpList = player->chooseCardsToLose(numCardsToReturn);
+                for (const auto& pair : giveUpList) {
+                    resources_cards[pair.first] -= pair.second;
+                }
                 std::cout << "Player " << player->getId() << " returns " << numCardsToReturn << " cards to the stock." << std::endl;
+                std::cout << "Remember, the ROBBER always gets his share... Muahahaha!" << std::endl;
             }
         }
     }
 
 
-//    void Game::moveCards(int player_id, vector<int> indexes) {
-//        auto player = players[player_id - 1];
-//        vector<shared_ptr<ResourceCard>> player_cards = player->getResourceCards();
-//        for (int i : indexes){
-//            if(i >= player_cards.size()){
-//                throw std::out_of_range("index is out of range");
-//            }
-//            auto card = player_cards[i];
-//            resourceCardDecks.push_back(std::move(player_cards[i]));
-//        }
-//    }
 
 
 }

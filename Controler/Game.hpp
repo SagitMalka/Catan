@@ -4,7 +4,6 @@
 #include <memory>
 #include "../Model/Board.hpp"
 #include "../Model/Player.hpp"
-#include "../Model/ResourceCardDeck.hpp"
 #include "../Model/DevelopmentCardDeck.hpp"
 using std::vector;
 using std::shared_ptr;
@@ -14,7 +13,8 @@ namespace model {
     class Game {
     private:
         Board board;
-        vector<ResourceCardDeck> resourceCardDecks;
+        std::map<Resource, int> resources_cards = {{Resource::Ore, 19}, {Resource::Sheep, 19}, {Resource::Brick, 19}, {Resource::Wheat, 19}, {Resource::Wood, 19}};
+
         DevelopmentCardDeck developmentCardDeck;
         vector<shared_ptr<Player>> players;
         int currentPlayerIndex;
@@ -25,7 +25,7 @@ namespace model {
         // Private helper methods
         void determineWinner();
         void distributeResources(int rollResult);
-        [[nodiscard]] bool canBuildSettlement(int playerId, int nodeId) const;
+        [[nodiscard]] static bool canBuildSettlement(int playerId, int nodeId) ;
         void handleRollOfSeven();
     public:
         Game();
@@ -75,6 +75,10 @@ namespace model {
         void chooseWhatToBuild(const std::shared_ptr<Player> &player);
 
         bool chooseWhatToDo(const shared_ptr<Player> &player);
+
+        int getCounter(Resource r) const;
+
+        void changeCounter(Resource r, int amount);
     };
 
 }

@@ -6,7 +6,7 @@
 #include <ostream>
 
 #include <utility>
-using std::cout, std::endl;
+using std::cout, std::endl, std::cin;
 
 namespace model {
 
@@ -30,81 +30,42 @@ namespace model {
         development_cards.push_back(development_card);
     }
 
-    void Player::addResourceCard(const shared_ptr<ResourceCard>(&resource)) {
-        resource_cards.push_back(resource);
+
+    bool Player::hasEnoughResources(std::map<Resource, int> price) const {
+        return price.at(Resource::Wood) <= resources_cards.at(Resource::Wood) &&
+                price.at(Resource::Wheat) <= resources_cards.at(Resource::Wheat) &&
+                price.at(Resource::Ore) <= resources_cards.at(Resource::Ore) &&
+                price.at(Resource::Sheep) <= resources_cards.at(Resource::Sheep) &&
+                price.at(Resource::Brick) <= resources_cards.at(Resource::Brick);
     }
 
-    bool Player::hasResourcesForNewSettlement() const {
-        const int requiredBrick = 1;
-        const int requiredWood = 1;
-        const int requiredWheat = 1;
-        const int requiredSheep = 1;
-
-        if (countResource(Resource::Brick) < requiredBrick) return false;
-        if (countResource(Resource::Wood) < requiredWood) return false;
-        if (countResource(Resource::Wheat) < requiredWheat) return false;
-        if (countResource(Resource::Sheep) < requiredSheep) return false;
-
-        return true;
+    void Player::payResources(std::map<Resource, int> price)
+    {
+        resources_cards[Resource::Wood] -= price.at(Resource::Wood);
+        resources_cards[Resource::Wheat] -= price.at(Resource::Wheat);
+        resources_cards[Resource::Ore] -= price.at(Resource::Ore);
+        resources_cards[Resource::Sheep] -= price.at(Resource::Sheep);
+        resources_cards[Resource::Brick] -= price.at(Resource::Brick);
     }
-    bool Player::hasResourcesForCity() const {
-        const int requiredOre = 3;
-        const int requiredWheat = 2;
 
-        if (countResource(Resource::Ore) < requiredOre) return false;
-        if (countResource(Resource::Wheat) < requiredWheat) return false;
-        return true;
-    }
-    bool Player::hasResourcesForDevCard() const {
-        const int requiredOre = 1;
-        const int requiredSheep = 1;
-        const int requiredWheat = 1;
+    bool Player::hasResourcesForNewSettlement() const { return hasEnoughResources(SETTLEMENT_COST); }
+    void Player::payForSettlement() { payResources(SETTLEMENT_COST); }
 
-        if (countResource(Resource::Ore) < requiredOre) return false;
-        if (countResource(Resource::Sheep) < requiredSheep) return false;
-        if (countResource(Resource::Wheat) < requiredWheat) return false;
-        return true;
-    }
-    bool Player::hasResourcesForRoad() const {
-        const int requiredBrick = 1;
-        const int requiredWood = 1;
-        if (countResource(Resource::Brick) < requiredBrick) return false;
-        if (countResource(Resource::Wood) < requiredWood) return false;
-        return true;
-    }
+    bool Player::hasResourcesForCity() const { return hasEnoughResources(CITY_COST); }
+    void Player::payForCity() { payResources(CITY_COST); }
+
+    bool Player::hasResourcesForCard() const { return hasEnoughResources(CARD_COST); }
+    void Player::payForCard() { payResources(CARD_COST); }
+
+    bool Player::hasResourcesForRoad() const { return hasEnoughResources(ROAD_COST); }
+    void Player::payForRoad(){ payResources(ROAD_COST); }
+
+
     int Player::countResource(Resource resource) const {
-        int count = 0;
-        for (const auto &card: resource_cards) {
-            if (card->getResourceType() == resource) {
-                ++count;
-            }
-        }
-        return count;
+
+        return resources_cards.at(Resource::Wheat) + resources_cards.at(Resource::Sheep) +resources_cards.at(Resource::Brick) + resources_cards.at(Resource::Wood) +resources_cards.at(Resource::Ore);
     }
 
-    void Player::deductResourcesForSettlement() {
-        int brick = 1, wood = 1, wheat = 1, sheep = 1;
-        for (int i = 0; i < int(resource_cards.size()); i++) {
-            if (brick && resource_cards[i]->resource_type == Resource::Brick) {
-                resource_cards.erase(resource_cards.begin() + i);
-                brick = 0;
-            } else if (wood && resource_cards[i]->resource_type == Resource::Wood) {
-                resource_cards.erase(resource_cards.begin() + i);
-                wood = 0;
-            } else if (wheat && resource_cards[i]->resource_type == Resource::Wheat) {
-                resource_cards.erase(resource_cards.begin() + i);
-                wheat = 0;
-            } else if (sheep && resource_cards[i]->resource_type == Resource::Sheep) {
-                resource_cards.erase(resource_cards.begin() + i);
-                sheep = 0;
-            }
-        }
-
-    }
-
-/**
- * maybe controller should call updateScore & setOwner
- * */
     void Player::addSettlement(const shared_ptr<Node> &settlement) {
         settlements_cities.push_back(settlement);
         settlement->setNodeStatus(NodeStatus::SETTLEMENT);
@@ -112,6 +73,8 @@ namespace model {
         settlement->setOwner(id);
     }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "readability-use-falloff"
     bool Player::hasAdjacentRoad(int node_id) {
         for (auto &road: roads) {
             if (road->getNodeOfRoad(1)->getId() == node_id) {
@@ -122,6 +85,7 @@ namespace model {
         }
         return false;
     }
+#pragma clang diagnostic pop
 
     std::string Player::getName() {
         if (IS_COLOR) {
@@ -156,61 +120,94 @@ namespace model {
         return roads;
     }
 
-    void Player::addResourceCard(Resource resource) {
-        resource_cards.push_back(std::make_shared<ResourceCard>(resource));
+    void Player::addResourceCard(Resource resource, int count) {
+        switch (resource) {
+            case Resource::Ore:
+                resources_cards[Resource::Ore] += count;
+                break;
+            case Resource::Wood:
+                resources_cards[Resource::Wood] += count;
+                break;
+            case Resource::Brick:
+                resources_cards[Resource::Brick] += count;
+                break;
+            case Resource::Sheep:
+                resources_cards[Resource::Sheep] += count;
+                break;
+            case Resource::Wheat:
+                resources_cards[Resource::Wheat] += count;
+                break;
+            case Resource::Desert:
+                break;
+        }
+    }
+
+    void Player::showCards() const{
+    cout << resources_cards.at(Resource::Ore) << " Ore cards" << endl;
+    cout << resources_cards.at(Resource::Wheat) << " Wheat cards" << endl;
+    cout << resources_cards.at(Resource::Wood) << " Wood cards" << endl;
+    cout << resources_cards.at(Resource::Brick) << " Brick cards" << endl;
+    cout << resources_cards.at(Resource::Sheep) << " Sheep cards" << endl;
+
+}
+
+    std::map<Resource, int> Player::chooseCardsToLose(int numOfResourcesToGive) {
+        showCards();
+        std::map<Resource, int> give_up_list = {{Resource::Wood, 0}, {Resource::Wheat, 0}, {Resource::Ore, 0}, {Resource::Sheep, 0}, {Resource::Brick, 0}};
+        std::cout << "Player " << name << ", you have more than 7 cards (" << getTotalResourceCards()
+                  << ").\nTime to part with " << numOfResourcesToGive << " of them. Sorry, not sorry!" << std::endl;
+
+        int p_choose_type, p_choose_amount;
+        while (numOfResourcesToGive){
+            cout << "this is the cards you have left:" << endl;
+            showCards();
+            cout << "You have " << numOfResourcesToGive << " more cards to give the ROBBER!. choose type: " <<endl;
+
+
+            cout << "1. Ore" << endl << "2. Wheat" << endl << "3. Wood" << endl << "4. Brick" << endl << "5. Sheep" << endl;
+            cin >> p_choose_type;
+            cout << "And how many of them can you spare?";
+            cin >> p_choose_amount;
+            Resource r;
+            switch (p_choose_type) {
+                case 1:
+                    r = Resource::Ore;
+                    break;
+                case 2:
+                    r = Resource::Wheat;
+                    break;
+                case 3:
+                    r = Resource::Wood;
+                    break;
+                case 4:
+                    r = Resource::Brick;
+                    break;
+                case 5:
+                    r = Resource::Sheep;
+                    break;
+                default:
+                    r = Resource::Desert;
+            }
+            if(r != Resource::Desert)
+            {
+                if (p_choose_amount <= 0) cout << "Please choose a positive number."<<endl;
+                else if (p_choose_amount > numOfResourcesToGive) cout << "You can't give up more cards than needed (" << numOfResourcesToGive << ")." << endl;
+                else if (p_choose_amount > resources_cards[r]) cout << "You can't give up " << p_choose_amount <<" because you only have" << resources_cards[r] << " cards of this type."<<endl;
+                else
+                {
+                    resources_cards[r] -= p_choose_amount;
+                    numOfResourcesToGive -= p_choose_amount;
+                    give_up_list[r] += p_choose_amount;
+                }
+            }else{
+                cout << "Illegal input. the ROBBER won't give up that easy. try again!  "<<endl;
+            }
+        }
+        return give_up_list;
     }
 
     int Player::getTotalResourceCards() const {
-        int total = 0;
-        for (const auto& pair : resourceCards) {
-            total += pair.second;
-        }
-        return total;
-    }
-
-
-    vector<int> Player::returnResourceCards(int numOfResources) {
-        cout << name << " you need to return " << numOfResources << " cards." << endl << "here is list: " << endl;
-        int i = 1;
-        for (const auto& card : resource_cards) {
-            cout << i << "). " << card->toString() << " " << endl;
-            i++;
-        }
-        cout << "What cards you wish to return? enter numbers only" << endl;
-        i = 1;
-        string os;
-        vector<int> to_return;
-        while (i <= numOfResources){
-            std::cin >> os;
-            to_return.push_back(i-1);
-            i++;
-        }
-        return to_return;
-
-    }
-
-    vector<shared_ptr<model::ResourceCard>> & Player::getResourceCards() {
-        return resource_cards;
-    }
-
-    void Player::returnResourceCards(int numCardsToReturn, int gameDeckOwnerId) {
-        for (auto& pair : resourceCards) {
-            if (numCardsToReturn <= 0) break;
-            Resource resourceType = pair.first;
-            int& count = pair.second;
-
-            if (count > 0) {
-                int toReturn = std::min(numCardsToReturn, count);
-                count -= toReturn;
-                numCardsToReturn -= toReturn;
-
-                // Update owner ID of the returned cards (this is a simplified example)
-                for (int i = 0; i < toReturn; ++i) {
-                    auto card = std::make_shared<ResourceCard>(resourceType);
-                    card->setOwnerId(gameDeckOwnerId); // Set owner ID to -1 to indicate the game deck
-                }
-            }
-        }
+        return resources_cards.at(Resource::Wood) + resources_cards.at(Resource::Wheat) + resources_cards.at(Resource::Ore) + resources_cards.at(Resource::Sheep) + resources_cards.at(Resource::Brick);
     }
 
 

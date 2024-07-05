@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "DevelopmentCard.hpp"
-#include "ResourceCard.hpp"
 #include "Road.hpp"
 #include "Node.hpp"
 #include "Constants.hpp"
@@ -22,9 +21,9 @@ namespace model{
         std::string name;
         int score = 0;
         std::string color;
-
+         std::map<Resource, int> resources_cards = {{Resource::Ore, 0}, {Resource::Sheep, 0}, {Resource::Brick, 0}, {Resource::Wheat, 0}, {Resource::Wood, 0}};
         vector<DevelopmentCard> development_cards;
-        vector<shared_ptr<ResourceCard>> resource_cards;
+        //vector<shared_ptr<ResourceCard>> resource_cards;
         vector<shared_ptr<Road>> roads = {};
         vector<shared_ptr<Node>> settlements_cities = {};
 
@@ -45,10 +44,10 @@ namespace model{
         void addDevelopmentCard(DevelopmentCard& development_card);
 
         [[nodiscard]] bool hasResourcesForNewSettlement() const;
-        [[nodiscard]] bool hasResourcesForDevCard() const;
+        [[nodiscard]] bool hasResourcesForCard() const;
         [[nodiscard]] bool hasResourcesForCity() const;
         [[nodiscard]] bool hasResourcesForRoad() const;
-        void deductResourcesForSettlement();
+        void payForSettlement();
         void addSettlement(const shared_ptr<Node>& settlement);
 
         bool hasAdjacentRoad(int node_id);
@@ -56,12 +55,22 @@ namespace model{
         vector<shared_ptr<Node>> getPlayerSettlements();
         const vector<shared_ptr<Road>>& getPlayerRoads() const;
 
-        void addResourceCard(Resource resource);
-        void addResourceCard(const shared_ptr<ResourceCard> &resource);
+        void addResourceCard(Resource resource, int count=1);
+        //void addResourceCard(const shared_ptr<ResourceCard> &resource);
         [[nodiscard]] int getTotalResourceCards() const;
-        void returnResourceCards(int numCardsToReturn, int gameDeckOwnerId);
-        vector<int> returnResourceCards(int numOfResources);
-        vector<shared_ptr<model::ResourceCard>> & getResourceCards();
+        std::map<Resource, int> chooseCardsToLose(int numOfResourcesToGive);
+
+        void payResources(std::map<Resource, int> price);
+
+        void payForCity();
+
+        void payForCard();
+
+        void payForRoad();
+
+        void showCards() const;
+
+        bool hasEnoughResources(std::map<Resource, int> price) const;
     };
 }
 

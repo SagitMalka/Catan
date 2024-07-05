@@ -14,25 +14,21 @@ SRCS = main.cpp \
        Model/Road.cpp \
        Model/Node.cpp \
        Model/Board.cpp \
-       Model/ResourceCard.cpp \
        Model/DevelopmentCard.cpp \
        Model/CardDeck.cpp \
        Model/ResourceCardDeck.cpp \
        Model/DevelopmentCardDeck.cpp \
        Controler/Game.cpp
 
-HDRS = Model/Resource.hpp \
-       Model/Tile.hpp \
+HDRS = Model/Tile.hpp \
        Model/Player.hpp \
        Model/Road.hpp \
        Model/Node.hpp \
        Model/Board.hpp \
-       Model/ResourceCard.hpp \
        Model/DevelopmentCard.hpp \
        Model/Constants.hpp \
        Model/Card.hpp \
        Model/CardDeck.hpp \
-       Model/ResourceCardDeck.hpp \
        Model/DevelopmentCardDeck.hpp \
        Controler/Game.hpp
 
