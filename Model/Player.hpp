@@ -10,8 +10,9 @@
 #include "Node.hpp"
 #include "Constants.hpp"
 #include <memory>
+#include <unordered_map>
 
-using std::vector;
+using std::vector, std::unordered_map;
 
 using std::shared_ptr;
 namespace model{
@@ -57,6 +58,10 @@ namespace model{
 
         void addResourceCard(Resource resource);
         void addResourceCard(const shared_ptr<ResourceCard> &resource);
+        [[nodiscard]] int getTotalResourceCards() const;
+        void returnResourceCards(int numCardsToReturn, int gameDeckOwnerId);
+        vector<int> returnResourceCards(int numOfResources);
+        vector<shared_ptr<model::ResourceCard>> & getResourceCards();
     };
 }
 

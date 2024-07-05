@@ -26,6 +26,7 @@ namespace model {
         void determineWinner();
         void distributeResources(int rollResult);
         [[nodiscard]] bool canBuildSettlement(int playerId, int nodeId) const;
+        void handleRollOfSeven();
     public:
         Game();
 

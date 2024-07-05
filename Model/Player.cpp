@@ -3,9 +3,10 @@
 //
 
 #include "Player.hpp"
-
+#include <ostream>
 
 #include <utility>
+using std::cout, std::endl;
 
 namespace model {
 
@@ -157,6 +158,59 @@ namespace model {
 
     void Player::addResourceCard(Resource resource) {
         resource_cards.push_back(std::make_shared<ResourceCard>(resource));
+    }
+
+    int Player::getTotalResourceCards() const {
+        int total = 0;
+        for (const auto& pair : resourceCards) {
+            total += pair.second;
+        }
+        return total;
+    }
+
+
+    vector<int> Player::returnResourceCards(int numOfResources) {
+        cout << name << " you need to return " << numOfResources << " cards." << endl << "here is list: " << endl;
+        int i = 1;
+        for (const auto& card : resource_cards) {
+            cout << i << "). " << card->toString() << " " << endl;
+            i++;
+        }
+        cout << "What cards you wish to return? enter numbers only" << endl;
+        i = 1;
+        string os;
+        vector<int> to_return;
+        while (i <= numOfResources){
+            std::cin >> os;
+            to_return.push_back(i-1);
+            i++;
+        }
+        return to_return;
+
+    }
+
+    vector<shared_ptr<model::ResourceCard>> & Player::getResourceCards() {
+        return resource_cards;
+    }
+
+    void Player::returnResourceCards(int numCardsToReturn, int gameDeckOwnerId) {
+        for (auto& pair : resourceCards) {
+            if (numCardsToReturn <= 0) break;
+            Resource resourceType = pair.first;
+            int& count = pair.second;
+
+            if (count > 0) {
+                int toReturn = std::min(numCardsToReturn, count);
+                count -= toReturn;
+                numCardsToReturn -= toReturn;
+
+                // Update owner ID of the returned cards (this is a simplified example)
+                for (int i = 0; i < toReturn; ++i) {
+                    auto card = std::make_shared<ResourceCard>(resourceType);
+                    card->setOwnerId(gameDeckOwnerId); // Set owner ID to -1 to indicate the game deck
+                }
+            }
+        }
     }
 
 

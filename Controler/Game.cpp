@@ -195,7 +195,11 @@ namespace model {
         int totalRoll = roll1 + roll2;
 
         cout << "Player " << name << " rolled a " << totalRoll << endl;
-        distributeResources(totalRoll);
+        if(totalRoll == 7){
+            handleRollOfSeven();
+        }else{
+            distributeResources(totalRoll);
+        }
     }
 
 
@@ -463,6 +467,32 @@ namespace model {
         }
         return can_build;
     }
+
+    void Game::handleRollOfSeven() {
+        std::cout << "Handling roll of 7: players with more than 7 resource cards must return half to the stock." << std::endl;
+
+        for (const auto& player : players) {
+            int numResourceCards = player->getTotalResourceCards();
+            if (numResourceCards > 7) {
+                int numCardsToReturn = numResourceCards / 2;
+                player->returnResourceCards(numCardsToReturn, -1);
+                std::cout << "Player " << player->getId() << " returns " << numCardsToReturn << " cards to the stock." << std::endl;
+            }
+        }
+    }
+
+
+//    void Game::moveCards(int player_id, vector<int> indexes) {
+//        auto player = players[player_id - 1];
+//        vector<shared_ptr<ResourceCard>> player_cards = player->getResourceCards();
+//        for (int i : indexes){
+//            if(i >= player_cards.size()){
+//                throw std::out_of_range("index is out of range");
+//            }
+//            auto card = player_cards[i];
+//            resourceCardDecks.push_back(std::move(player_cards[i]));
+//        }
+//    }
 
 
 }
