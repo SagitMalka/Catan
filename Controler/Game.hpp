@@ -14,7 +14,7 @@ namespace model {
     class Game {
     private:
         Board board;
-        ResourceCardDeck resourceCardDeck;
+        vector<ResourceCardDeck> resourceCardDecks;
         DevelopmentCardDeck developmentCardDeck;
         vector<shared_ptr<Player>> players;
         int currentPlayerIndex;
@@ -43,7 +43,7 @@ namespace model {
         [[nodiscard]] const shared_ptr<Player>& getCurrentPlayer() const;
 
         // Game actions
-        void rollDice();
+        void rollDice(string name);
         void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
         void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
@@ -65,7 +65,7 @@ namespace model {
 
         void tryBuildRoad(const shared_ptr<Player> &player);
 
-        void tryBuildSettlement(const shared_ptr<Player> &player);
+        void tryBuildSettlement(const shared_ptr<Player> &player) const;
 
         static void printAvailableNodes(vector<shared_ptr<Node>> &node_list);
 

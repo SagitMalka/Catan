@@ -11,14 +11,13 @@ using std::ostream;
 namespace model {
 
     class ResourceCard : public Card{
-    private:
-
 
     public:
-        Resource resource_type;
         explicit ResourceCard(Resource resource_type);
         [[nodiscard]] Resource getResourceType() const;
         [[nodiscard]] string toString() const override;
+
+        Resource resource_type;
     };
 
 }

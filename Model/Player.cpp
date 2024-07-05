@@ -29,8 +29,8 @@ namespace model {
         development_cards.push_back(development_card);
     }
 
-    void Player::addResourceCard(const Resource resource) {
-        resource_cards.push_back(std::make_shared<ResourceCard>(resource));
+    void Player::addResourceCard(const shared_ptr<ResourceCard>(&resource)) {
+        resource_cards.push_back(resource);
     }
 
     bool Player::hasResourcesForNewSettlement() const {
@@ -153,6 +153,10 @@ namespace model {
 
     const vector<shared_ptr<Road>>& Player::getPlayerRoads() const {
         return roads;
+    }
+
+    void Player::addResourceCard(Resource resource) {
+        resource_cards.push_back(std::make_shared<ResourceCard>(resource));
     }
 
 

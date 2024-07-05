@@ -42,7 +42,6 @@ namespace model{
 
         void updateScore(int points);
         void addDevelopmentCard(DevelopmentCard& development_card);
-        void addResourceCard(Resource resource);
 
         [[nodiscard]] bool hasResourcesForNewSettlement() const;
         [[nodiscard]] bool hasResourcesForDevCard() const;
@@ -56,6 +55,8 @@ namespace model{
         vector<shared_ptr<Node>> getPlayerSettlements();
         const vector<shared_ptr<Road>>& getPlayerRoads() const;
 
+        void addResourceCard(Resource resource);
+        void addResourceCard(const shared_ptr<ResourceCard> &resource);
     };
 }
 

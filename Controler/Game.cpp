@@ -1,6 +1,9 @@
 #include "Game.hpp"
+#include <cstdlib> // for std::rand and std::srand
+#include <ctime> // for std::time
+#include <string>
 
-using std::cout, std::cin, std::endl;
+using std::cout, std::cin, std::endl, std::srand, std::string;
 namespace model {
 
     Game::Game()
@@ -11,8 +14,14 @@ namespace model {
     void Game::initializeGame() {
         // Initialize board, decks, and players
         model::Board::initializeBoard();
-        resourceCardDeck.resetDeck();
+        resourceCardDecks.emplace_back(Resource::Ore);
+        resourceCardDecks.emplace_back(Resource::Brick);
+        resourceCardDecks.emplace_back(Resource::Wood);
+        resourceCardDecks.emplace_back(Resource::Sheep);
+        resourceCardDecks.emplace_back(Resource::Wheat);
         developmentCardDeck.resetDeck();
+
+        srand(static_cast<unsigned int>(std::time(nullptr)));
     }
 
 /**
@@ -68,7 +77,7 @@ namespace model {
         }
     }
 
-    void Game::tryBuildSettlement(const shared_ptr<Player> &player) {
+    void Game::tryBuildSettlement(const shared_ptr<Player> &player) const {
         if (player->hasResourcesForNewSettlement()) {
             cout << "choose your new settlement" << endl;
             vector<shared_ptr<Node>> available_nodes = availableSettlementToBuild();
@@ -160,7 +169,9 @@ namespace model {
 
     void Game::startTurn() {
         auto player = getCurrentPlayer();
-        cout << player->getName() << "'s turn" << endl;
+        string name = player->getName();
+        cout << name << "'s turn" << endl;
+        rollDice(name);
 
         cout << "What would you like to do?" << endl;
         bool resume = true;
@@ -178,8 +189,13 @@ namespace model {
         return players[currentPlayerIndex];
     }
 
-    void Game::rollDice() {
-        // Logic to roll the dice and distribute resources
+    void Game::rollDice(string name) {
+        int roll1 = rand() % 6 + 1;
+        int roll2 = rand() % 6 + 1;
+        int totalRoll = roll1 + roll2;
+
+        cout << "Player " << name << " rolled a " << totalRoll << endl;
+        distributeResources(totalRoll);
     }
 
 
@@ -214,8 +230,48 @@ namespace model {
         // Logic to determine the winner based on game rules
     }
 
+    int getIndexOfResourceInDeck(Resource resource){
+        int index;
+        switch (resource) {
+            case Resource::Ore:
+                return 0;
+            case Resource::Brick:
+                return 1;
+            case Resource::Wood:
+                return 2;
+            case Resource::Sheep:
+                return 3;
+            case Resource::Wheat:
+                return 4;
+            default:
+                throw  std::invalid_argument("Unknown resource type");
+        }
+    }
+
     void Game::distributeResources(int rollResult) {
-        // Logic to distribute resources based on the roll result
+        std::cout << "Distributing resources for roll: " << rollResult << std::endl;
+
+        // Iterate over each tile and distribute resources if the roll matches the tile's number
+        for (const auto& tile : model::Board::getTiles()) {
+            if (tile.getDicedNumber() == rollResult) {
+                for (const auto& node : tile.getNodes()) {
+                    if (!(node->isAvailable())) {
+                        int ownerId = node->getOwnerId();
+                        auto owner = players[ownerId -1];
+                        auto resource_card_type = tile.getResourceType();
+                        int indx = getIndexOfResourceInDeck(resource_card_type);
+                        if(resourceCardDecks[indx].isEmpty()){
+                            throw std::out_of_range("no more cards on deck");
+                        }
+
+                        shared_ptr<ResourceCard> resource_card = resourceCardDecks[indx].drawCard();
+                        owner->addResourceCard(resource_card);
+                        std::cout << "Player " << owner->getName() << " receives "
+                                  << resource_card->toString() << " from tile " << tile.getId() << std::endl;
+                    }
+                }
+            }
+        }
     }
 
     bool Game::canBuildSettlement(int playerId, int nodeId) const {

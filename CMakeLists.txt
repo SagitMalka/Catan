@@ -21,7 +21,6 @@ add_executable(Catan main.cpp
         Model/DevelopmentCard.hpp
         Model/Constants.hpp
         Model/Card.hpp
-        Model/CardDeck.cpp
         Model/CardDeck.hpp
         Model/ResourceCardDeck.cpp
         Model/ResourceCardDeck.hpp

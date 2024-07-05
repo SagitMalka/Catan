@@ -1,31 +1,19 @@
-
 #include "ResourceCardDeck.hpp"
 
-namespace model{
-    ResourceCardDeck::ResourceCardDeck() {
+namespace model {
+
+    ResourceCardDeck::ResourceCardDeck(Resource resourceType)
+            : resourceType(resourceType) {
         initializeDeck();
-        shuffleDeck();
-    }
-    void ResourceCardDeck::initializeDeck() {
-        for (int i = 0; i < MAX_WOOD_CARDS; ++i) {
-            deck.emplace_back(Resource::Wood);
-        }
-        for (int i = 0; i < MAX_WOOD_CARDS; ++i) {
-            deck.emplace_back(Resource::Brick);
-        }
-        for (int i = 0; i < MAX_WOOD_CARDS; ++i) {
-            deck.emplace_back(Resource::Sheep);
-        }
-        for (int i = 0; i < MAX_WOOD_CARDS; ++i) {
-            deck.emplace_back(Resource::Ore);
-        }
-        for (int i = 0; i < MAX_WOOD_CARDS; ++i) {
-            deck.emplace_back(Resource::Wheat);
-        }
     }
 
-    void ResourceCardDeck::resetDeck() {
-        initializeDeck();
+    void ResourceCardDeck::initializeDeck() {
+        // Assuming each deck should have a certain number of cards.
+        int numCards = 19; // Example number, adjust as necessary
+        for (int i = 0; i < numCards; ++i) {
+            deck.push_back(std::make_shared<ResourceCard>(resourceType));
+        }
         shuffleDeck();
     }
-}
+
+} // namespace model
