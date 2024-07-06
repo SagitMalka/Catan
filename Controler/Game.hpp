@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <set>
 #include "../Model/Board.hpp"
 #include "../Model/Player.hpp"
 #include "../Model/DevelopmentCardDeck.hpp"
@@ -64,7 +65,7 @@ namespace model {
         [[nodiscard]] vector<shared_ptr<Road>> availableRoadsToBuild() const;
 
 
-        void tryBuildRoad(const shared_ptr<Player> &player);
+        void roadBuildMenu(const shared_ptr<Player> &player);
 
         void tryBuildSettlement(const shared_ptr<Player> &player) const;
 
@@ -79,6 +80,8 @@ namespace model {
         int getCounter(Resource r) const;
 
         void changeCounter(Resource r, int amount);
+
+        void payForPurchase(std::map<Resource, int> price, const shared_ptr<Player> &player);
     };
 
 }

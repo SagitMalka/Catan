@@ -67,7 +67,9 @@ namespace model {
         static int getTileNum(int id);
         //static void updateNodeStatus(int node_id, NodeStatus status);
         static vector<shared_ptr<Road>> getAdjacentRoads(const shared_ptr<Node> &node);
+        static vector<shared_ptr<Road>> getAdjacentRoads(const shared_ptr<Road> &road);
         static vector<shared_ptr<Road>> getAvailableAdjacentRoads(const shared_ptr<Node> &node);
+        static vector<shared_ptr<Road>> getAvailableAdjacentRoads(const shared_ptr<Road> &road);
         static std::string roadsListToString(vector<shared_ptr<Road>>& roads_list);
     };
 

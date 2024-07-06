@@ -49,6 +49,8 @@ namespace model{
     #define WHITE_BACKGROUND "\033[47m"
     #define LIGHT_RED_BACKGROUND "\033[101m"
     #define BOLD_TEXT "\033[1m"
+    #define ANSI_COLOR_LIGHT_BROWN_BG "\033[48;5;95m"
+    #define CANCEL -1
     const std::map<Resource, int> CITY_COST =          {{Resource::Wood, 0}, {Resource::Wheat, 2}, {Resource::Ore, 3}, {Resource::Sheep, 0}, {Resource::Brick, 0}};
     const std::map<Resource, int> SETTLEMENT_COST =    {{Resource::Wood, 1}, {Resource::Wheat, 1}, {Resource::Ore, 0}, {Resource::Sheep, 1}, {Resource::Brick, 1}};
     const std::map<Resource, int> CARD_COST =          {{Resource::Wood, 0}, {Resource::Wheat, 1}, {Resource::Ore, 1}, {Resource::Sheep, 1}, {Resource::Brick, 0}};

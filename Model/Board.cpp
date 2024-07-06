@@ -304,7 +304,15 @@ namespace model {
         std::vector<std::shared_ptr<Node>> result(adjacentNodes.begin(), adjacentNodes.end());
         return result;
     }
-
+    vector<shared_ptr<Road>> Board::getAdjacentRoads(const shared_ptr<Road> &road){
+        vector<shared_ptr<Road>> adj_roads;
+        for (int i = 0; i < 2; ++i) {
+            for (const auto& r: getAdjacentRoads(road->getNodeOfRoad(i+1))){
+                if(r->getId() != road->getId()) adj_roads.push_back(r);
+            }
+        }
+        return adj_roads;
+    }
     vector<shared_ptr<Road>> Board::getAdjacentRoads(const shared_ptr<Node> &node) {
         vector<shared_ptr<Road>> adj_roads;
         for (const auto& road : roads) {
@@ -324,6 +332,17 @@ namespace model {
         }
         return adj_roads;
     }
+
+    vector<shared_ptr<Road>> Board::getAvailableAdjacentRoads(const shared_ptr<Road> &road) {
+        vector<shared_ptr<Road>> adj_roads;
+        for (const auto& r : getAdjacentRoads(road)) {
+            if(r->isAvailable()){
+                adj_roads.push_back(r);
+            }
+        }
+        return adj_roads;
+    }
+
     std::string Board::roadsListToString(vector<shared_ptr<Road>> &roads_list) {
         std::string s;
         for(const auto& r :  roads_list){

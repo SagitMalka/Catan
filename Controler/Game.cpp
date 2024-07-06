@@ -4,44 +4,82 @@
 #include <string>
 
 
+using std::cout, std::cin, std::endl, std::srand, std::string, std::out_of_range,
+        std::numeric_limits, std::streamsize, std::map, std::to_string, std::make_shared;
 
-using std::cout, std::cin, std::endl, std::srand, std::string;
 namespace model {
-    std::string ResourceToString(Resource resource) {
+    string ResourceToString(Resource resource) {
         switch (resource) {
-            case Resource::Wood: return "Wood";
-            case Resource::Brick: return "Brick";
-            case Resource::Sheep: return "Sheep";
-            case Resource::Wheat: return "Wheat";
-            case Resource::Ore: return "Ore";
-            case Resource::Desert: return "Desert";
-            default: return "Unknown Resource";
+            case Resource::Wood:
+                return "Wood";
+            case Resource::Brick:
+                return "Brick";
+            case Resource::Sheep:
+                return "Sheep";
+            case Resource::Wheat:
+                return "Wheat";
+            case Resource::Ore:
+                return "Ore";
+            case Resource::Desert:
+                return "Desert";
+            default:
+                return "Unknown Resource";
         }
     }
+
+    void pressAnyKeyToContinue() {
+        cout << "Press Enter to continue..." << endl;
+        cin.get();
+    }
+
+    int displayMenu(const string msg, const vector<string> &options) {
+        int choice = -1;
+
+        // Display menu options
+        cout << WHITE_BACKGROUND << BLACK << BOLD_TEXT << msg << ":" << RESET << endl;
+        for (size_t i = 0; i < options.size(); ++i) {
+            cout << WHITE_BACKGROUND << BLACK << i + 1 << ")" << " " << options[i] << "\n";
+        }
+        cout << BOLD_TEXT << "Enter your choice (1-" << options.size() << "): " << endl << RESET;
+        cin >> choice;
+
+        // Validate user input
+        while (choice < 1 || choice > static_cast<int>(options.size())) {
+            cout << "Invalid choice. Please enter a number between 1 and " << options.size() << ": ";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin >> choice;
+        }
+        if (choice == options.size())
+            return -1;
+        else
+            return choice -1;
+    }
+
 
     Game::Game()
             : currentPlayerIndex(0), gameOver(false), winner(nullptr) {
         initializeGame();
     }
 
-    void Game::initializeGame()  {
+    void Game::initializeGame() {
         // Initialize board, decks, and players
         model::Board::initializeBoard();
 
         developmentCardDeck.resetDeck();
 
-        srand(static_cast<unsigned int>(std::time(nullptr)));
+        srand(static_cast<unsigned int>(time(nullptr)));
     }
 
 /**
  * TO DO:
  * in controller call addPlayer
  * */
-    void Game::addPlayer(const std::shared_ptr<Player> &player) {
+    void Game::addPlayer(const shared_ptr<Player> &player) {
         players.push_back(player);
     }
 
-    const std::vector<std::shared_ptr<Player>> &Game::getPlayers() const {
+    const vector<shared_ptr<Player>> &Game::getPlayers() const {
         return players;
     }
 
@@ -54,35 +92,60 @@ namespace model {
         int choice = 0;
 
         while (true) {
-            std::cout << "Enter the number corresponding to your choice: ";
-            std::cin >> choice;
+            cout << "Enter the number corresponding to your choice: ";
+            cin >> choice;
 
             if (choice > 0 && choice <= options_size) {
                 return choice;
             } else {
-                std::cout << "Invalid choice. Please select a number between 1 and " << options_size << ".\n";
+                cout << "Invalid choice. Please select a number between 1 and " << options_size << ".\n";
             }
         }
     }
 
-    void Game::tryBuildRoad(const shared_ptr<Player> &player) {
+    void Game::payForPurchase(map<Resource, int> price, const shared_ptr<Player> &player) {
+        player->payResources(price);
+
+        resources_cards[Resource::Wood] += price.at(Resource::Wood);
+        resources_cards[Resource::Wheat] += price.at(Resource::Wheat);
+        resources_cards[Resource::Ore] += price.at(Resource::Ore);
+        resources_cards[Resource::Sheep] += price.at(Resource::Sheep);
+        resources_cards[Resource::Brick] += price.at(Resource::Brick);
+    }
+
+//    void Game::payForSettlement() { payResources(SETTLEMENT_COST); }
+
+    void Game::roadBuildMenu(const shared_ptr<Player> &player) {
         vector<shared_ptr<Road>> edges;
         int road_index = -1;
         if (player->hasResourcesForRoad()) {
-            cout << "choose your new road" << endl;
             edges = availableRoadsToBuild();
-            printAvailableRoads(edges);
-            road_index = getUserChoice(edges.size());
-            player->addRoad(board.getRoad(road_index));
+
+            vector<string> edges_str;
+            for (const auto &e: edges) {
+                edges_str.push_back("Road-" + to_string(e->getId()));
+            }
+            edges_str.push_back("Cancel.");
+
+            int user_choice = displayMenu("Which road would you like to build?", edges_str); // TODO change options after buy
+            if(user_choice == -1) return;
+
+            if (user_choice < edges_str.size()) {
+                auto r = board.getRoad(edges[user_choice]->getId());
+                player->addRoad(r);
+                std::cout << "Congratulations! You have built road -- " << r->getId() << " -- !." << std::endl;
+
+                payForPurchase(ROAD_COST, player);
+            }
         } else {
             cout << "You do not have enough resources." << endl;
         }
     }
 
     void Game::printAvailableNodes(vector<shared_ptr<Node>> &node_list) {
-        std::cout << "You can chooseWhatToBuild a new settlement in: " << std::endl;
+        cout << "You can chooseWhatToBuild a new settlement in: " << endl;
         for (int i = 0; i < int(node_list.size()); ++i) {
-            std::cout << i + 1 << ") Edge-" << node_list[i]->getId() << std::endl;
+            cout << i + 1 << ") Edge-" << node_list[i]->getId() << endl;
         }
     }
 
@@ -113,27 +176,28 @@ namespace model {
         return can_build;
     }
 
-    void Game::chooseWhatToBuild(const std::shared_ptr<Player> &player) {
-        cout <<
-             "1) Build road" << endl <<
-             "2) Build settlement" << endl <<
-             "3) Build City" << endl <<
-             "4) cancel" << endl;
+    void Game::chooseWhatToBuild(const shared_ptr<Player> &player) {
+        int option = displayMenu(
+                "⚒\uFE0FWhat grand construction will you undertake?⚒\uFE0F",
+                {
+                        "Lay down a road!",
+                        "Build a new settlement",
+                        "Upgrade to a city",
+                        "Changed my mind (Cancel)",
+                });
 
-        int sub_option = getUserChoice(4);
-
-        switch (sub_option) {
-            case 1:  // ROAD
-                tryBuildRoad(player);
+        switch (option) {
+            case -1:
+                cout << "Build canceled.." << endl;
                 break;
-            case 2: // SETTLEMENT
+            case 0:  // ROAD
+                roadBuildMenu(player);
+                break;
+            case 1: // SETTLEMENT
                 tryBuildSettlement(player);
                 break;
-            case 3:
+            case 2:
                 cout << "Implement here" << endl;
-                break;
-            case 4:
-                cout << "Build canceled.." << endl;
                 break;
             default:
                 cout << "Invalid choice. Please select a number between 1 and 3." << endl;
@@ -142,49 +206,59 @@ namespace model {
     }
 
     bool Game::chooseWhatToDo(const shared_ptr<Player> &player) {
-        int option = 0, sub_option = 0;
-        cout <<
-             "1) Build (road/settlement/city)" << endl <<
-             "2) Trade" << endl <<
-             "3) Buy a development card" << endl <<
-             "4) Use a development card" << endl <<
-             "5) Finish Turn" << endl;
-
-        option = getUserChoice(5);
-
+        int option = displayMenu(
+                "What's your next move, brave settler?",
+                {
+                        "Show my resources",
+                        "Show board",
+                        "Build something (road/settlement/city) ⚒\uFE0F",
+                        "Trade",
+                        "Buy Dev Card",
+                        "Use a Dev Card",
+                        "End your turn "
+                });
+        bool resume = true;
         switch (option) {
+            case -1:
+                resume = false;
+                break;
+            case 0:
+                player->showCards();
+                break;
             case 1:
-                chooseWhatToBuild(player);
-                return true;
+                cout << board << endl;
+                break;
             case 2:
-                // TODO method to trade
-                return true;
+                chooseWhatToBuild(player);
+                break;
             case 3:
+                // TODO method to trade
+                break;
+            case 4:
                 //TODO check if player has enough resource cards
                 if (buyDevelopmentCard() != 0) {
                     cout << "Sorry no more development cards or no money" << endl;
                 }
-                return true;
-            case 4:
-                //TODO check if it's cards are useful
-                return true;
+                break;
             case 5:
-                return false;
+                //TODO check if it's cards are useful
+                break;
             default:
                 cout << "Invalid choice." << endl;
-                return true;
+                break;
         }
+        return resume;
     }
 
     void Game::startTurn() {
+        cout << endl << endl << endl << board << endl;
         auto player = getCurrentPlayer();
         string name = player->getName();
-        cout << name << "'s turn" << endl;
-//        player->showCards();
+        cout << name << "'s turn" << endl << "This is your cards:" << endl;
+        player->showCards();
+        pressAnyKeyToContinue();
         rollDice(name);
-//        player->showCards();
 
-        cout << "What would you like to do?" << endl;
         bool resume = true;
         while (resume) {
             resume = chooseWhatToDo(player);
@@ -195,7 +269,7 @@ namespace model {
         currentPlayerIndex = (currentPlayerIndex + 1) % int(players.size());
     }
 
-    const std::shared_ptr<Player> &Game::getCurrentPlayer() const {
+    const shared_ptr<Player> &Game::getCurrentPlayer() const {
         return players[currentPlayerIndex];
     }
 
@@ -203,11 +277,13 @@ namespace model {
         int roll1 = rand() % 6 + 1;
         int roll2 = rand() % 6 + 1;
         int totalRoll = roll1 + roll2;
-        cout << endl << "You rolled " << totalRoll << "!" <<endl;
-        DICE();
-        if(totalRoll == 7){
+        if (totalRoll == 7) totalRoll++; // TODO remove this line
+        cout << endl << "You rolled " << totalRoll << "!" << endl;
+        if (totalRoll == 7) {
+            ROBBER();
             handleRollOfSeven();
-        }else{
+        } else {
+            DICE();
             distributeResources(totalRoll);
         }
     }
@@ -236,7 +312,7 @@ namespace model {
         return gameOver;
     }
 
-    const std::shared_ptr<Player> &Game::getWinner() const {
+    const shared_ptr<Player> &Game::getWinner() const {
         return winner;
     }
 
@@ -244,7 +320,7 @@ namespace model {
         // Logic to determine the winner based on game rules
     }
 
-    int Game::getCounter(Resource r) const{
+    int Game::getCounter(Resource r) const {
         switch (r) {
             case Resource::Wood:
                 return resources_cards.at(Resource::Wood);
@@ -261,8 +337,7 @@ namespace model {
         }
     }
 
-    void Game::changeCounter(Resource r, int amount)
-    {
+    void Game::changeCounter(Resource r, int amount) {
         switch (r) {
             case Resource::Wood:
                 resources_cards[Resource::Wood] += amount;
@@ -278,26 +353,27 @@ namespace model {
                 return;
         }
     }
-    void Game::distributeResources(int rollResult) {
-        std::cout << "Distributing resources for roll: " << rollResult << std::endl;
 
-        for (const auto& tile : model::Board::getTiles()) {
+    void Game::distributeResources(int rollResult) {
+        cout << "Distributing resources for roll: " << rollResult << endl;
+
+        for (const auto &tile: model::Board::getTiles()) {
             if (tile.getDicedNumber() == rollResult) {
-                for (const auto& node : tile.getNodes()) {
+                for (const auto &node: tile.getNodes()) {
                     if (!(node->isAvailable())) {
                         int ownerId = node->getOwnerId();
-                        auto owner = players[ownerId -1];
+                        auto owner = players[ownerId - 1];
                         auto resource_card_type = tile.getResourceType();
 
-                        if(getCounter(resource_card_type) == 0) throw std::out_of_range("no more cards on deck");
+                        if (getCounter(resource_card_type) == 0) throw out_of_range("no more cards on deck");
 
                         int card_num = node->getNodeStatus() == NodeStatus::SETTLEMENT ? 1 : 2;
                         owner->addResourceCard(resource_card_type, card_num);
                         changeCounter(resource_card_type, -card_num);
 
-                        std::cout << "Player " << owner->getName()
-                        << " receives " << model::ResourceToString(resource_card_type)
-                        << " from tile " << tile.getId() << std::endl;
+                        cout << "Player " << owner->getName()
+                             << " receives " << model::ResourceToString(resource_card_type)
+                             << " from tile " << tile.getId() << endl;
                     }
                 }
             }
@@ -317,8 +393,8 @@ namespace model {
         return InitialPlacementPhase;
     }
 
-    void Game::addPlayer(const std::string &name, int id) {
-        shared_ptr<Player> p = std::make_shared<Player>(name, id);
+    void Game::addPlayer(const string &name, int id) {
+        shared_ptr<Player> p = make_shared<Player>(name, id);
         players.push_back(p);
     }
 
@@ -332,6 +408,8 @@ namespace model {
         p->addSettlement(s);
 
         p->addRoad(board.getRoad(43));
+        p->addRoad(board.getRoad(50));
+        p->addRoad(board.getRoad(45));
         p->addRoad(board.getRoad(38));
         p->addRoad(board.getRoad(53));
         p->addResourceCard(Resource::Wood);
@@ -339,6 +417,9 @@ namespace model {
         p->addResourceCard(Resource::Wood);
         p->addResourceCard(Resource::Brick);
         p->addResourceCard(Resource::Brick);
+        p->addResourceCard(Resource::Wheat);
+        p->addResourceCard(Resource::Wheat);
+        p->addResourceCard(Resource::Ore);
         p->addResourceCard(Resource::Ore);
         p->addResourceCard(Resource::Ore);
         p->addResourceCard(Resource::Ore);
@@ -400,9 +481,9 @@ namespace model {
         currentPlayerIndex = indx;
         auto p = players[indx];
 
-        std::cout << "Player: " << p->getName() << " choose a node for your settlement" << std::endl;
+        cout << "Player: " << p->getName() << " choose a node for your settlement" << endl;
         int n;
-        std::cin >> n;
+        cin >> n;
         int a = 1;
         while (n < 0 || n > 53 || !canBuildSettlement(indx, n)) {
             if (!canBuildSettlement(indx, n)) {
@@ -417,26 +498,26 @@ namespace model {
         auto s = model::Board::getNode(n);
         blockAdjNodes(s);
         p->addSettlement(s);
-        std::cout << board << std::endl;
+        cout << board << endl;
         auto adj_roads = model::Board::getAvailableAdjacentRoads(s);
 
-        std::cout << "Player: " << p->getName() << " choose a road" << std::endl;
-        std::cout << "You can chooseWhatToBuild a new road in: " << std::endl;
+        cout << "Player: " << p->getName() << " choose a road" << endl;
+        cout << "You can chooseWhatToBuild a new road in: " << endl;
         printAvailableRoads(adj_roads);
 
 
         int length = int(adj_roads.size());
         cout << "Please Enter a number between 1 to " << length << endl;
-        std::cin >> n;
+        cin >> n;
         while (n <= 0 || n > length) {
             cout << "Invalid choice. Please Enter a number between 1 to " << length << endl;
             printAvailableRoads(adj_roads);
-            std::cin >> n;
+            cin >> n;
         }
 
         p->addRoad(board.getRoad(n));
 
-        std::cout << board << std::endl;
+        cout << board << endl;
     }
 
     void Game::endOfInitialPlacement() {
@@ -445,9 +526,9 @@ namespace model {
 
 
     void Game::printAvailableRoads(vector<shared_ptr<Road>> &road_list) {
-        std::cout << "You can chooseWhatToBuild a new road in: " << std::endl;
+        cout << "You can chooseWhatToBuild a new road in: " << endl;
         for (int i = 0; i < int(road_list.size()); ++i) {
-            std::cout << i + 1 << ") Edge-" << road_list[i]->getId() << std::endl;
+            cout << i + 1 << ") Edge-" << road_list[i]->getId() << endl;
         }
     }
 
@@ -461,36 +542,38 @@ namespace model {
 
     vector<shared_ptr<Road>> Game::availableRoadsToBuild() const {
         auto p = getCurrentPlayer();
-        vector<shared_ptr<Road>> can_build;
-        for (const auto &node: p->getPlayerSettlements()) {
+        std::set<shared_ptr<Road>> can_build;
+        for (const auto &road: p->getPlayerRoads()) {
             // TODO get nodes by road and not by node. example if u have edge 22 you can build 14, 18, 31, 27
-            auto adj_nodes = model::Board::getAvailableAdjacentRoads(node);
-            for (const auto &n: adj_nodes) {
-                can_build.push_back(n);
+            auto adj_roads = model::Board::getAvailableAdjacentRoads(road);
+            for (const auto &n: adj_roads) {
+                can_build.insert(n);
             }
         }
-        return can_build;
+        std::vector<shared_ptr<Road>> v(can_build.begin(), can_build.end());
+        return v;
     }
 
     void Game::handleRollOfSeven() {
-//        std::cout << "Handling roll of 7: players with more than 7 resource cards must return half to the stock." << std::endl;
-        std::cout << "Oh no! The ROBBER strikes! Everyone with more than 7 cards, prepare to pay the toll." << std::endl;
-        ROBBER();
-        for (const auto& player : players) {
+//        cout << "Handling roll of 7: players with more than 7 resource cards must return half to the stock." << endl;
+        cout << "Oh no! The ROBBER strikes! Everyone with more than 7 cards, prepare to pay the toll."
+             << endl;
+
+
+        for (const auto &player: players) {
             int numResourceCards = player->getTotalResourceCards();
             if (numResourceCards > 7) {
                 int numCardsToReturn = numResourceCards / 2;
-                std::map<Resource, int> giveUpList = player->chooseCardsToLose(numCardsToReturn);
-                for (const auto& pair : giveUpList) {
+                map<Resource, int> giveUpList = player->chooseCardsToLose(numCardsToReturn);
+                for (const auto &pair: giveUpList) {
                     resources_cards[pair.first] -= pair.second;
                 }
-                std::cout << "Player " << player->getId() << " returns " << numCardsToReturn << " cards to the stock." << std::endl;
-                std::cout << "Remember, the ROBBER always gets his share... Muahahaha!" << std::endl;
+                cout << "Player " << player->getId() << " returns " << numCardsToReturn << " cards to the stock."
+                     << endl;
+                cout << "Remember, the ROBBER always gets his share... Muahahaha!" << endl;
             }
         }
     }
-
-
 
 
 }

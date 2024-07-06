@@ -143,12 +143,13 @@ namespace model {
     }
 
     void Player::showCards() const{
-    cout << resources_cards.at(Resource::Ore) << " Ore cards" << endl;
-    cout << resources_cards.at(Resource::Wheat) << " Wheat cards" << endl;
-    cout << resources_cards.at(Resource::Wood) << " Wood cards" << endl;
-    cout << resources_cards.at(Resource::Brick) << " Brick cards" << endl;
-    cout << resources_cards.at(Resource::Sheep) << " Sheep cards" << endl;
-
+    cout<< BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "==========================" << RESET << endl;
+    cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "|| >\t" << resources_cards.at(Resource::Ore) << " Ore cards\t\t||" << RESET << endl;
+    cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "|| >\t" << resources_cards.at(Resource::Wheat) << " Wheat cards\t||" << RESET << endl;
+    cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "|| >\t" << resources_cards.at(Resource::Wood) << " Wood cards\t||" << RESET << endl;
+    cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "|| >\t" << resources_cards.at(Resource::Brick) << " Brick cards\t||" << RESET << endl;
+    cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "|| >\t" << resources_cards.at(Resource::Sheep) << " Sheep cards\t||" << RESET << endl;
+    cout<< BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "==========================" << RESET << endl << endl;
 }
 
     std::map<Resource, int> Player::chooseCardsToLose(int numOfResourcesToGive) {
