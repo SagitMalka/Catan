@@ -49,7 +49,7 @@ namespace model{
         [[nodiscard]] bool hasResourcesForRoad() const;
         void payForSettlement();
         void addSettlement(const shared_ptr<Node>& settlement);
-
+        void addCity(const shared_ptr<Node>& node);
         bool hasAdjacentRoad(int node_id);
         void addRoad(const shared_ptr<Road>& road);
         vector<shared_ptr<Node>> getPlayerSettlements();

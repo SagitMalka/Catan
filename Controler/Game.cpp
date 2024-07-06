@@ -53,7 +53,7 @@ namespace model {
         if (choice == options.size())
             return -1;
         else
-            return choice -1;
+            return choice - 1;
     }
 
 
@@ -128,7 +128,7 @@ namespace model {
             edges_str.push_back("Cancel.");
 
             int user_choice = displayMenu("Which road would you like to build?", edges_str);
-            if(user_choice == -1) return;
+            if (user_choice == -1) return;
 
             auto r = board.getRoad(edges[user_choice]->getId());
             player->addRoad(r);
@@ -147,7 +147,7 @@ namespace model {
         }
     }
 
-    void Game::settlementBuildMenu(const shared_ptr<Player> &player){
+    void Game::settlementBuildMenu(const shared_ptr<Player> &player) {
         vector<string> nodes_str;
 
         if (player->hasResourcesForNewSettlement()) {
@@ -157,7 +157,7 @@ namespace model {
             }
             nodes_str.push_back("Cancel.");
             int user_choice = displayMenu("Which settlement would you like to build?", nodes_str);
-            if(user_choice == -1) return;
+            if (user_choice == -1) return;
 
             auto n = board.getNode(available_nodes[user_choice]->getId());
             player->addSettlement(n);
@@ -168,12 +168,32 @@ namespace model {
             cout << "You do not have enough resources." << endl;
         }
     }
+
+    void Game::cityBuildMenu(const shared_ptr<Player> &player) {
+        vector<string> nodes_str;
+        if (player->hasResourcesForCity()) {
+            vector<shared_ptr<Node>> available_nodes = player->getPlayerSettlements();
+            for (const auto &n: available_nodes) {
+                nodes_str.push_back("Node-" + to_string(n->getId()));
+            }
+            nodes_str.emplace_back("Cancel.");
+            int user_choice = displayMenu("Which settlement would you like to upgrade to a city?", nodes_str);
+            if (user_choice == -1) return;
+
+            auto n = board.getNode(available_nodes[user_choice]->getId());
+            player->addCity(n);
+            std::cout << "Congratulations! You have a new City -- " << n->getId() << " -- !." << std::endl;
+
+            payForPurchase(CITY_COST, player);
+        } else {
+            cout << "You do not have enough resources." << endl;
+        }
+    }
+
     bool Game::canSettlementBeBuilt(const shared_ptr<Node> &node) const {
-        if (node->isAvailable()){
-            for(auto &r: board.getAdjacentRoads(node))
-            {
-                if (!r->getOtherNode(node)->isAvailable())
-                {
+        if (node->isAvailable()) {
+            for (auto &r: board.getAdjacentRoads(node)) {
+                if (!r->getOtherNode(node)->isAvailable()) {
                     return false;
                 }
             }
@@ -181,17 +201,17 @@ namespace model {
         }
         return false;
     }
+
     vector<shared_ptr<Node>> Game::availableSettlementToBuild() const {
         auto p = getCurrentPlayer();
         std::set<shared_ptr<Node>> candidates = {};
         vector<shared_ptr<Node>> can_build;
         for (const auto &road: p->getPlayerRoads()) {
-            for (const auto& node: road->getNodes()) {
+            for (const auto &node: road->getNodes()) {
                 candidates.insert(node);
             }
         }
-        for(const auto& node: candidates)
-        {
+        for (const auto &node: candidates) {
             if (canSettlementBeBuilt(node)) {
                 can_build.push_back(node);
             }
@@ -220,7 +240,7 @@ namespace model {
                 settlementBuildMenu(player);
                 break;
             case 2:
-                cout << "Implement here" << endl;
+                cityBuildMenu(player);
                 break;
             default:
                 cout << "Invalid choice. Please select a number between 1 and 3." << endl;

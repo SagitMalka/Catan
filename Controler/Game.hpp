@@ -68,7 +68,7 @@ namespace model {
         void roadBuildMenu(const shared_ptr<Player> &player);
 
         void settlementBuildMenu(const shared_ptr<Player> &player);
-
+        void cityBuildMenu(const shared_ptr<Player> &player);
         static void printAvailableNodes(vector<shared_ptr<Node>> &node_list);
 
         vector<shared_ptr<Node>> availableSettlementToBuild() const;
