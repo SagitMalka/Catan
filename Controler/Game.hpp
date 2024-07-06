@@ -45,14 +45,15 @@ namespace model {
         [[nodiscard]] const shared_ptr<Player>& getCurrentPlayer() const;
 
         // Game actions
-        void rollDice(string name);
+        void rollDice(const string& name);
         void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
+        void tradeWithDeck(shared_ptr<Player>& player);
         void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
         int buyDevelopmentCard();
 
         // Game state queries
-        [[nodiscard]] bool isGameOver() const;
+         bool isGameOver() const;
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
         void InitialPlacement(int i);
@@ -84,6 +85,8 @@ namespace model {
         void payForPurchase(std::map<Resource, int> price, const shared_ptr<Player> &player);
 
         bool canSettlementBeBuilt(const shared_ptr<Node> &node) const;
+
+        void chooseResourceTraid(const shared_ptr<Player> &player);
     };
 
 }

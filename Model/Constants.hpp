@@ -55,7 +55,7 @@ namespace model{
     const std::map<Resource, int> SETTLEMENT_COST =    {{Resource::Wood, 1}, {Resource::Wheat, 1}, {Resource::Ore, 0}, {Resource::Sheep, 1}, {Resource::Brick, 1}};
     const std::map<Resource, int> CARD_COST =          {{Resource::Wood, 0}, {Resource::Wheat, 1}, {Resource::Ore, 1}, {Resource::Sheep, 1}, {Resource::Brick, 0}};
     const std::map<Resource, int> ROAD_COST =          {{Resource::Wood, 1}, {Resource::Wheat, 0}, {Resource::Ore, 0}, {Resource::Sheep, 0}, {Resource::Brick, 1}};
-
+//    const std::map<Resource, int> TRADE_WOOD_COST =          {{Resource::Wood, 4}, {Resource::Wheat, 0}, {Resource::Ore, 0}, {Resource::Sheep, 0}, {Resource::Brick, 0}};
 
     inline std::string getColorByID(int id) {
         switch (id) {

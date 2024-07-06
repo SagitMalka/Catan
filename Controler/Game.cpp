@@ -247,7 +247,50 @@ namespace model {
                 break;
         }
     }
+    Resource Game::chooseResource(){
 
+    }
+void Game::chooseResourceTrade(const shared_ptr<Player> &player){
+    int take = displayMenu(
+            "Choose a resource to get from deck",
+            {
+                    "Wood",
+                    "Wheat",
+                    "Brick",
+                    "Sheep",
+                    "Ore",
+                    "Cancel"
+            });
+    int give = displayMenu(
+            "Choose a resource to lose",
+            {
+                    "Wood",
+                    "Wheat",
+                    "Brick",
+                    "Sheep",
+                    "Ore",
+                    "Cancel"
+            });
+    switch (take) {
+        case -1:
+            return;
+        case 0:
+
+            break;
+        case 1:
+
+            break;
+        case 2:
+
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+    }
+    }
     bool Game::chooseWhatToDo(const shared_ptr<Player> &player) {
         int option = displayMenu(
                 "What's your next move, brave settler?",
@@ -309,6 +352,8 @@ namespace model {
     }
 
     void Game::endTurn() {
+        cout << "You have " << getCurrentPlayer()->getScore() << " points" << endl;
+        isGameOver();
         currentPlayerIndex = (currentPlayerIndex + 1) % int(players.size());
     }
 
@@ -316,7 +361,7 @@ namespace model {
         return players[currentPlayerIndex];
     }
 
-    void Game::rollDice(string name) {
+    void Game::rollDice(const string& name) {
         int roll1 = rand() % 6 + 1;
         int roll2 = rand() % 6 + 1;
         int totalRoll = roll1 + roll2;
@@ -352,7 +397,9 @@ namespace model {
     }
 
     bool Game::isGameOver() const {
-        return gameOver;
+        auto p = getCurrentPlayer();
+        int points = p->getScore();
+        return points >= 10 ? true : false;
     }
 
     const shared_ptr<Player> &Game::getWinner() const {
@@ -617,6 +664,10 @@ namespace model {
                 cout << "Remember, the ROBBER always gets his share... Muahahaha!" << endl;
             }
         }
+    }
+
+    void Game::tradeWithDeck(shared_ptr<Player> &player) {
+
     }
 
 

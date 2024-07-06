@@ -16,7 +16,15 @@ namespace model {
     }
 
     int Player::getScore() const {
-        return score;
+        int s = 0;
+        for(const auto& n : settlements_cities){
+            if(n->getNodeStatus() == NodeStatus::SETTLEMENT){
+                s +=1;
+            } else{
+                s+= 2;
+            }
+        }
+        return s + getNumberOfRoads();
     }
 
     void Player::updateScore(int points) {
@@ -170,7 +178,30 @@ namespace model {
         cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "==========================" << RESET << endl
              << endl;
     }
+    bool Player::canTradeWithDeck(){
+        if(resources_cards.at(Resource::Wheat) >= 4 ||
+        resources_cards.at(Resource::Sheep) >= 4 ||
+        resources_cards.at(Resource::Brick) >= 4 ||
 
+       resources_cards.at(Resource::Wood) >= 4 ||
+
+       resources_cards.at(Resource::Ore) >= 4){
+            return true;
+        }
+        return false;
+    }
+    int Player::chooseCardsToTrade() const{
+        int user_choice = 0;
+        while (user_choice < 1 || user_choice >> 5){
+            cout << "choose resource: " << endl;
+            showCards();
+            cout << "1. Ore" << endl << "2. Wheat" << endl << "3. Wood" << endl << "4. Brick" << endl << "5. Sheep"
+                 << endl;
+            cin >> user_choice;
+        }
+        return user_choice;
+
+    }
     std::map<Resource, int> Player::chooseCardsToLose(int numOfResourcesToGive) {
         showCards();
         std::map<Resource, int> give_up_list = {{Resource::Wood, 0},
@@ -236,6 +267,10 @@ namespace model {
         return resources_cards.at(Resource::Wood) + resources_cards.at(Resource::Wheat) +
                resources_cards.at(Resource::Ore) + resources_cards.at(Resource::Sheep) +
                resources_cards.at(Resource::Brick);
+    }
+
+    int Player::getNumberOfRoads() const {
+        return int(roads.size());
     }
 
 

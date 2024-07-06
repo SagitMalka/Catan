@@ -39,6 +39,7 @@ namespace model{
         [[nodiscard]] int getId() const;
         std::string getName();
         string getColor();
+        int getNumberOfRoads() const;
 
         void updateScore(int points);
         void addDevelopmentCard(DevelopmentCard& development_card);
@@ -71,6 +72,12 @@ namespace model{
         void showCards() const;
 
         bool hasEnoughResources(std::map<Resource, int> price) const;
+
+        int chooseCardsToTrade();
+
+        bool canTradeWithDeck();
+
+        int chooseCardsToTrade() const;
     };
 }
 
