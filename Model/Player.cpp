@@ -167,18 +167,7 @@ namespace model {
         cout << BOLD_TEXT << ANSI_COLOR_LIGHT_BROWN_BG << BLACK << "==========================" << RESET << endl
              << endl;
     }
-    bool Player::canTradeWithDeck(){
-        if(resources_cards.at(Resource::Wheat) >= 4 ||
-           resources_cards.at(Resource::Sheep) >= 4 ||
-           resources_cards.at(Resource::Brick) >= 4 ||
 
-           resources_cards.at(Resource::Wood) >= 4 ||
-
-           resources_cards.at(Resource::Ore) >= 4){
-            return true;
-        }
-        return false;
-    }
     int Player::chooseCardsToTrade() const{
         int user_choice = 0;
         while (user_choice < 1 || user_choice >> 5){

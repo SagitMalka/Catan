@@ -23,4 +23,6 @@ add_executable(Catan main.cpp
         Model/DevelopmentCardDeck.hpp
         Controler/Game.cpp
         Controler/Game.hpp
+        doctest.h
+        tests.cpp
 )

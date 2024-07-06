@@ -48,7 +48,6 @@ namespace model {
         void rollDice(const string& name);
         void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
-        void tradeWithDeck(shared_ptr<Player>& player);
         int buyDevelopmentCard();
 
         // Game state queries
