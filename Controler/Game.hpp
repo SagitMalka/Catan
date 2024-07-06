@@ -8,8 +8,10 @@
 #include "../Model/DevelopmentCardDeck.hpp"
 using std::vector;
 using std::shared_ptr;
+using namespace model;
 
-namespace model {
+namespace model{
+
 
     class Game {
     private:
@@ -88,5 +90,5 @@ namespace model {
         int getPlayerWithLongestRoad() const;
     };
 
-}
 
+}

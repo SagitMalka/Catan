@@ -5,6 +5,16 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
 
 TARGET = Catan
 
+SRCSTST = Model/Tile.cpp \
+       Model/Player.cpp \
+       Model/Road.cpp \
+       Model/Node.cpp \
+       Model/Board.cpp \
+       Model/DevelopmentCard.cpp \
+       Model/DevelopmentCardDeck.cpp \
+       Controler/Game.cpp \
+       tests.cpp
+       
 SRCS = main.cpp \
        Model/Tile.cpp \
        Model/Player.cpp \
@@ -12,8 +22,6 @@ SRCS = main.cpp \
        Model/Node.cpp \
        Model/Board.cpp \
        Model/DevelopmentCard.cpp \
-       Model/CardDeck.cpp \
-       Model/ResourceCardDeck.cpp \
        Model/DevelopmentCardDeck.cpp \
        Controler/Game.cpp
 
@@ -31,7 +39,12 @@ HDRS = Model/Tile.hpp \
 
 OBJS = $(SRCS:.cpp=.o)
 
+OBGSTST = $(SRCSTST:.cpp=.o)
+
 all: $(TARGET)
+
+test: $(OBGSTST)
+	$(CXX) $(CXXFLAGS) -o test $(OBGSTST)
 
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS)

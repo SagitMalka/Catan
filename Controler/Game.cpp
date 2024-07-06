@@ -3,11 +3,12 @@
 #include <ctime> // for std::time
 #include <string>
 
+ namespace model{
 
+ 
 using std::cout, std::cin, std::endl, std::srand, std::string, std::out_of_range,
         std::numeric_limits, std::streamsize, std::map, std::to_string, std::make_shared;
 
-namespace model {
     string ResourceToString(Resource resource) {
         switch (resource) {
             case Resource::Wood:
@@ -460,7 +461,7 @@ namespace model {
                         changeCounter(resource_card_type, -card_num);
 
                         cout << "Player " << owner->getName()
-                             << " receives " << model::ResourceToString(resource_card_type)
+                             << " receives " << ResourceToString(resource_card_type)
                              << " from tile " << tile.getId() << endl;
                     }
                 }
@@ -659,4 +660,5 @@ namespace model {
             }
         }
     }
-}
+
+ }
