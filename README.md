@@ -38,3 +38,16 @@ This project is licensed under the MIT License - see the [LICENSE](https://opens
 
 ### Screenshots
 #### Board
+<img width="250" alt="b" src=https://github.com/SagitMalka/Catan/assets/118733667/e26dff8e-f7ea-40f3-ab3b-fe3f71d7aa97>
+
+#### City (in node 30)
+<img width="142" alt="b" src="https://github.com/SagitMalka/Catan/assets/118733667/c800fde4-e530-46e3-933a-5edc66c96a0e">
+
+#### Dice
+<img width="250" alt="b" src=https://github.com/SagitMalka/Catan/assets/118733667/2998a41d-759a-4e09-bc5a-6db20eb83e6d>
+
+#### Robber
+<img width="250" alt="b" src=https://github.com/SagitMalka/Catan/assets/118733667/250629ac-34cd-4dc2-99e5-25a086640901>
+
+
+
