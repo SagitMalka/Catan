@@ -1,3 +1,4 @@
+// sagitmalka10@gmail.com
 
 #include "Road.hpp"
 
@@ -6,13 +7,6 @@
 
 namespace model {
     Road::Road(int id) : id(id), owner_id(-1) {}
-//    void Road::createNewRoad(Player *newOwner, Node* node_a, Node* node_b){
-////        this->owner = newOwner;
-////        this->settlement_1 = node_a;
-////        this->settlement_2 = node_b;
-//        this->available = false;
-//    }
-
 
     void Road::setOwner(int player_id) {
         owner_id = player_id;
@@ -22,20 +16,9 @@ namespace model {
         return this->owner_id == -1;
     }
 
-//    Node *Road::roadNode(Road &road, int i) {
-//        if(i == 1){
-//            return settlement_1;
-//        } else if(i == 2){
-//            return settlement_2;
-//        }
-//        return nullptr;
-//    }
-
     int Road::getId() const {
         return id;
     }
-
-
 
     int Road::getRoadOwnerId() const {
         return owner_id;
@@ -59,9 +42,8 @@ namespace model {
                 return node2;
             else if (node->getId() == node2->getId())
                 return node1;
-        }else {
-            throw std::runtime_error("Tried to get other node of a node that does not belong to road.");
         }
+        throw std::runtime_error("Tried to get other node of a node that does not belong to road.");
     }
 
     std::ostream &operator<<(std::ostream &os, const Road &road) {
@@ -86,10 +68,5 @@ namespace model {
         this->node1 = std::move(x);
         this->node2 = std::move(y);
     }
-//    Road::Road(int id, pair<Node*, Node*>* board_nodes) {
-//        this->id = id;
-//        this->road_nodes = &board_nodes;
-//    }
-
 
 }

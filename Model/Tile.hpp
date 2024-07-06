@@ -1,9 +1,10 @@
+// sagitmalka10@gmail.com
+
 #pragma once
 
 #include <vector>
 #include <memory>
 #include <array>
-//#include "Node.hpp"
 #include "Road.hpp"
 
 using std::vector;
@@ -11,7 +12,7 @@ using std::shared_ptr;
 using std::array;
 
 namespace model{
-const int NUM_NODES = 6;
+    const int NUM_NODES = 6;
     class Tile{
     private:
         int id;
@@ -20,15 +21,11 @@ const int NUM_NODES = 6;
         vector<shared_ptr<Node>> nodes = {};
         vector<shared_ptr<Road>> roads = {};
 
-        //array<Node*, NUM_NODES> tile_nodes = {};
-//        array<Road*, 6> tile_roads{};
-
     public:
         Tile()= default;
         Tile(int id, Resource resourceType, int number): id(id), resource_type(resourceType), diced_number(number) {}
         void setResourceType(Resource resource);
         void setDicedNumber(int num);
-        static void setId(int id);
 
         [[nodiscard]] int getId() const;
         [[nodiscard]] Resource getResourceType() const;

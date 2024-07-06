@@ -1,5 +1,8 @@
+// sagitmalka10@gmail.com
+
 #pragma once
 #include <map>
+#include <vector>
 
 namespace model{
     enum class Resource{
@@ -10,7 +13,8 @@ namespace model{
         Ore,
         Desert
     };
-
+    const std::vector<model::Resource> RESOURCES = {Resource::Wood, Resource::Brick, Resource::Sheep, Resource::Wheat, Resource::Ore};
+    const std::vector<std::string> RESOURCES_STR = {"Wood", "Brick", "Sheep", "Wheat", "Ore", "Cancel..."};
     // dev cards
     const int MAX_KNIGHT_CARDS = 14;
     const int MAX_VICTORY_POINT_CARDS = 5;
@@ -40,17 +44,13 @@ namespace model{
     const bool IS_COLOR = true;
     #define RESET   "\033[0m"
     #define BLACK   "\033[30m"
-    #define RED     "\033[41m"      /* Red background */
-    #define GREEN   "\033[42m"      /* Green background */
-    #define YELLOW  "\033[43m"      /* Yellow background */
-    #define BLUE    "\033[44m"      /* Blue background */
-    #define MAGENTA "\033[45m"      /* Magenta background */
-    #define CYAN    "\033[46m"      /* Cyan background */
+
     #define WHITE_BACKGROUND "\033[47m"
     #define LIGHT_RED_BACKGROUND "\033[101m"
     #define BOLD_TEXT "\033[1m"
     #define ANSI_COLOR_LIGHT_BROWN_BG "\033[48;5;95m"
     #define CANCEL -1
+    #define WINNING_SCORE 10
     const std::map<Resource, int> CITY_COST =          {{Resource::Wood, 0}, {Resource::Wheat, 2}, {Resource::Ore, 3}, {Resource::Sheep, 0}, {Resource::Brick, 0}};
     const std::map<Resource, int> SETTLEMENT_COST =    {{Resource::Wood, 1}, {Resource::Wheat, 1}, {Resource::Ore, 0}, {Resource::Sheep, 1}, {Resource::Brick, 1}};
     const std::map<Resource, int> CARD_COST =          {{Resource::Wood, 0}, {Resource::Wheat, 1}, {Resource::Ore, 1}, {Resource::Sheep, 1}, {Resource::Brick, 0}};

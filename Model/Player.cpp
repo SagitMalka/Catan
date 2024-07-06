@@ -1,6 +1,5 @@
-//
-// Created by SAGIT on 14/06/2024.
-//
+// sagitmalka10@gmail.com
+
 
 #include "Player.hpp"
 #include <ostream>
@@ -11,7 +10,7 @@ using std::cout, std::endl, std::cin;
 
 namespace model {
 
-    Player::Player(std::string name, int id) : name(std::move(name)), id(id) {
+    Player::Player(std::string name, int id) : id(id), name(std::move(name)){
         this->color = getColorByID(id);
     }
 
@@ -24,7 +23,7 @@ namespace model {
                 s+= 2;
             }
         }
-        return s + getNumberOfRoads();
+        return s;
     }
 
     void Player::updateScore(int points) {
@@ -124,7 +123,7 @@ namespace model {
     void Player::addRoad(const shared_ptr<Road> &road) {
         road->setOwner(this->id);
         this->roads.push_back(road);
-//        TODO check for longest road?
+
     }
 
     vector<shared_ptr<Node>> Player::getPlayerSettlements() {
@@ -142,25 +141,15 @@ namespace model {
     }
 
     void Player::addResourceCard(Resource resource, int count) {
-        switch (resource) {
-            case Resource::Ore:
-                resources_cards[Resource::Ore] += count;
-                break;
-            case Resource::Wood:
-                resources_cards[Resource::Wood] += count;
-                break;
-            case Resource::Brick:
-                resources_cards[Resource::Brick] += count;
-                break;
-            case Resource::Sheep:
-                resources_cards[Resource::Sheep] += count;
-                break;
-            case Resource::Wheat:
-                resources_cards[Resource::Wheat] += count;
-                break;
-            case Resource::Desert:
-                break;
-        }
+        resources_cards[resource] += count;
+    }
+
+    void Player::loseResourceCard(Resource resource, int count) {
+        resources_cards[resource] -= count;
+    }
+
+    int Player::getResourceCount(Resource resource) const {
+        return resources_cards.at(resource);
     }
 
     void Player::showCards() const {
@@ -180,12 +169,12 @@ namespace model {
     }
     bool Player::canTradeWithDeck(){
         if(resources_cards.at(Resource::Wheat) >= 4 ||
-        resources_cards.at(Resource::Sheep) >= 4 ||
-        resources_cards.at(Resource::Brick) >= 4 ||
+           resources_cards.at(Resource::Sheep) >= 4 ||
+           resources_cards.at(Resource::Brick) >= 4 ||
 
-       resources_cards.at(Resource::Wood) >= 4 ||
+           resources_cards.at(Resource::Wood) >= 4 ||
 
-       resources_cards.at(Resource::Ore) >= 4){
+           resources_cards.at(Resource::Ore) >= 4){
             return true;
         }
         return false;

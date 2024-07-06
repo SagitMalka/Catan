@@ -1,3 +1,4 @@
+// sagitmalka10@gmail.com
 
 #include "Tile.hpp"
 
@@ -22,10 +23,6 @@ namespace model {
         diced_number = num;
     }
 
-    void Tile::setId(int id) {
-        id = id;
-    }
-
     void Tile::addNodes(const vector<shared_ptr<Node>>& nodes_list) {
         nodes = nodes_list;
     }
@@ -41,7 +38,4 @@ namespace model {
     const vector<shared_ptr<model::Road>> & Tile::getRoads() const {
         return roads;
     }
-
-
-
 }

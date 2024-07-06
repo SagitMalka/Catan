@@ -1,12 +1,10 @@
-// model/Board.cpp
-
+// sagitmalka10@gmail.com
 #include "Board.hpp"
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
 #include <random>
 #include <unordered_set>
-//#include <iterator>
 
 using std::array;
 
@@ -415,13 +413,7 @@ namespace model {
         os<<"                             "<< e[69] <<"           "<< e[70] <<"                                  "<<std::endl;
         os<<"                               \\          /                                  "<<std::endl;
         os<<"                               " << n[52] << "--" << e[71] << "-" << n[53] << "                                   "<<std::endl;
-//        if(DBG)
-//        {
-//            os<<std::endl;
-//            for (auto p: ) {
-//
-//            }
-//        }
+
         return os;
     }
 

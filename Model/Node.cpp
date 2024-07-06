@@ -1,3 +1,4 @@
+// sagitmalka10@gmail.com
 
 #include "Node.hpp"
 
@@ -8,7 +9,17 @@ namespace model {
     NodeStatus Node::getNodeStatus() {
         return node_status;
     }
-
+    std::string Node::getNodeStatusStr() {
+        switch (node_status)
+        {
+            case NodeStatus::SETTLEMENT:
+                return "Settlement";
+            case NodeStatus::CITY:
+                return "City";
+            default:
+                return "Empty";
+        };
+    }
     void Node::setNodeStatus(NodeStatus newType) {
         node_status = newType;
     }
@@ -32,7 +43,11 @@ namespace model {
 
     std::ostream &operator<<(std::ostream &os, const Node &node) {
         if(IS_COLOR){
-            os << getColorByID(node.owner_id) << "|"<< node.id << "|"<< RESET;
+            std::string BG = "";
+            if (node.node_status == NodeStatus::CITY){
+                BG = WHITE_BACKGROUND;
+            }
+            os << BG << getColorByID(node.owner_id) << "|"<< node.id << "|"<< RESET;
         }else{
             os << "|"<< node.id<< "|";
         }

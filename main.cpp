@@ -1,3 +1,4 @@
+// sagitmalka10@gmail.com
 
 
 #include <iostream>
@@ -66,16 +67,25 @@ int main() {
     while(true)
     {
         game.startTurn();
+
+        shared_ptr<model::Player> winner = nullptr;
+        int player_with_longest_road = game.getPlayerWithLongestRoad();
+        for(const auto& p: game.getPlayers()){
+            int score = p->getScore();
+            if(p->getId() == player_with_longest_road){
+                score += 2;
+            }
+            cout << p->getName() << " has " << score << "Points" << endl;
+            if (score >= WINNING_SCORE){
+                winner = p;
+            }
+        }
+        if (winner != nullptr){
+            cout << winner->getName() << " Has Won The Game!!" << endl;
+            return 0;
+        }
         game.endTurn();
-        // TODO return if game finished!
     }
-    std::cout << board << endl;
 
-
-
-//    model::Board::printTileNodes(0);
-//    model::Board::printTileRoads(0);
-    //std::cout << board << std::endl;
-    return 0;
 }
 

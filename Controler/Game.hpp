@@ -26,7 +26,7 @@ namespace model {
         // Private helper methods
         void determineWinner();
         void distributeResources(int rollResult);
-        [[nodiscard]] static bool canBuildSettlement(int playerId, int nodeId) ;
+        [[nodiscard]] static bool canBuildSettlement(int nodeId);
         void handleRollOfSeven();
     public:
         Game();
@@ -49,11 +49,10 @@ namespace model {
         void buildSettlement(int playerId, int nodeId);
         void buildRoad(int roadId);
         void tradeWithDeck(shared_ptr<Player>& player);
-        void tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive);
         int buyDevelopmentCard();
 
         // Game state queries
-         bool isGameOver() const;
+        bool isGameOver() const;
         [[nodiscard]] const shared_ptr<Player>& getWinner() const;
 
         void InitialPlacement(int i);
@@ -70,13 +69,12 @@ namespace model {
 
         void settlementBuildMenu(const shared_ptr<Player> &player);
         void cityBuildMenu(const shared_ptr<Player> &player);
-        static void printAvailableNodes(vector<shared_ptr<Node>> &node_list);
 
         vector<shared_ptr<Node>> availableSettlementToBuild() const;
 
-        void chooseWhatToBuild(const std::shared_ptr<Player> &player);
+        void buildMenu(const std::shared_ptr<Player> &player);
 
-        bool chooseWhatToDo(const shared_ptr<Player> &player);
+        bool actionMenu(const shared_ptr<Player> &player);
 
         int getCounter(Resource r) const;
 
@@ -86,7 +84,9 @@ namespace model {
 
         bool canSettlementBeBuilt(const shared_ptr<Node> &node) const;
 
-        void chooseResourceTraid(const shared_ptr<Player> &player);
+        void tradeMenu(const shared_ptr<Player> &player);
+
+        int getPlayerWithLongestRoad() const;
     };
 
 }

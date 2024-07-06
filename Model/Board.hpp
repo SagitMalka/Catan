@@ -1,5 +1,5 @@
-#ifndef BOARD_H
-#define BOARD_H
+// sagitmalka10@gmail.com
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -73,6 +73,6 @@ namespace model {
         static std::string roadsListToString(vector<shared_ptr<Road>>& roads_list);
     };
 
-} // namespace model
+}
 
-#endif // BOARD_H
+

@@ -1,3 +1,4 @@
+// sagitmalka10@gmail.com
 
 #pragma once
 #include <iostream>
@@ -27,7 +28,7 @@ namespace model {
 
         [[nodiscard]] int getOwnerId() const;
         [[nodiscard]]  NodeStatus getNodeStatus() ;
-
+        std::string getNodeStatusStr();
         void setOwner(int newOwner);
         void setNodeStatus(NodeStatus newType);
         bool isAvailable() ;

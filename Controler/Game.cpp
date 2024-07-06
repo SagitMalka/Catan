@@ -32,7 +32,7 @@ namespace model {
         cin.get();
     }
 
-    int displayMenu(const string msg, const vector<string> &options) {
+    int displayMenu(const string &msg, const vector<string> &options) {
         int choice = -1;
 
         // Display menu options
@@ -71,10 +71,7 @@ namespace model {
         srand(static_cast<unsigned int>(time(nullptr)));
     }
 
-/**
- * TO DO:
- * in controller call addPlayer
- * */
+
     void Game::addPlayer(const shared_ptr<Player> &player) {
         players.push_back(player);
     }
@@ -87,21 +84,6 @@ namespace model {
  *
  *
  * */
-
-    int getUserChoice(size_t options_size) {
-        int choice = 0;
-
-        while (true) {
-            cout << "Enter the number corresponding to your choice: ";
-            cin >> choice;
-
-            if (choice > 0 && choice <= options_size) {
-                return choice;
-            } else {
-                cout << "Invalid choice. Please select a number between 1 and " << options_size << ".\n";
-            }
-        }
-    }
 
     void Game::payForPurchase(map<Resource, int> price, const shared_ptr<Player> &player) {
         player->payResources(price);
@@ -117,7 +99,6 @@ namespace model {
 
     void Game::roadBuildMenu(const shared_ptr<Player> &player) {
         vector<shared_ptr<Road>> edges;
-        int road_index = -1;
         if (player->hasResourcesForRoad()) {
             edges = availableRoadsToBuild();
 
@@ -128,7 +109,7 @@ namespace model {
             edges_str.push_back("Cancel.");
 
             int user_choice = displayMenu("Which road would you like to build?", edges_str);
-            if (user_choice == -1) return;
+            if (user_choice == CANCEL) return;
 
             auto r = board.getRoad(edges[user_choice]->getId());
             player->addRoad(r);
@@ -140,13 +121,6 @@ namespace model {
         }
     }
 
-    void Game::printAvailableNodes(vector<shared_ptr<Node>> &node_list) {
-        cout << "You can chooseWhatToBuild a new settlement in: " << endl;
-        for (int i = 0; i < int(node_list.size()); ++i) {
-            cout << i + 1 << ") Edge-" << node_list[i]->getId() << endl;
-        }
-    }
-
     void Game::settlementBuildMenu(const shared_ptr<Player> &player) {
         vector<string> nodes_str;
 
@@ -155,9 +129,9 @@ namespace model {
             for (const auto &n: available_nodes) {
                 nodes_str.push_back("Node-" + to_string(n->getId()));
             }
-            nodes_str.push_back("Cancel.");
+            nodes_str.emplace_back("Cancel.");
             int user_choice = displayMenu("Which settlement would you like to build?", nodes_str);
-            if (user_choice == -1) return;
+            if (user_choice == CANCEL) return;
 
             auto n = board.getNode(available_nodes[user_choice]->getId());
             player->addSettlement(n);
@@ -178,7 +152,7 @@ namespace model {
             }
             nodes_str.emplace_back("Cancel.");
             int user_choice = displayMenu("Which settlement would you like to upgrade to a city?", nodes_str);
-            if (user_choice == -1) return;
+            if (user_choice == CANCEL) return;
 
             auto n = board.getNode(available_nodes[user_choice]->getId());
             player->addCity(n);
@@ -219,7 +193,7 @@ namespace model {
         return can_build;
     }
 
-    void Game::chooseWhatToBuild(const shared_ptr<Player> &player) {
+    void Game::buildMenu(const shared_ptr<Player> &player) {
         int option = displayMenu(
                 "⚒\uFE0FWhat grand construction will you undertake?⚒\uFE0F",
                 {
@@ -247,51 +221,82 @@ namespace model {
                 break;
         }
     }
-    Resource Game::chooseResource(){
+
+
+    void Game::tradeMenu(const shared_ptr<Player> &player){
+        vector<string> trade_list;
+        vector<shared_ptr<Player>> trade_players;
+        trade_list.push_back("Bank");
+
+        for(const auto& p: players){
+            if (p->getId() != player->getId()){
+                trade_list.push_back(p->getName());
+                trade_players.push_back(p);
+            }
+        }
+        Resource resource_give, resource_take;
+        int player_choice = displayMenu( "Who would you like to trade with", trade_list);
+        if (player_choice == CANCEL) return;
+        if (player_choice == 0){
+            cout << "You are now trading with bank! the rate is 4 to 1." << endl;
+            int take = displayMenu("What resource do you want?", RESOURCES_STR);
+            resource_take = RESOURCES[take];
+
+            if (resources_cards[resource_take]< 1){
+                cout << "Trade fail, you need more than 4 for that trade but you only have " << player->getResourceCount(resource_take) << "." << endl;
+            }else{
+                int give = displayMenu("What resource can you give in return?",RESOURCES_STR);
+                resource_give = RESOURCES[give];
+                if(player->getResourceCount(resource_give) < 4){
+                    cout << "Trade fail, Bank dont have this resource left." << endl;
+                }else{
+                    resources_cards[resource_give] += 4;
+                    resources_cards[resource_take] -= 1;
+                    player->addResourceCard(resource_take);
+                    player->loseResourceCard(resource_give, 4);
+                }
+            }
+        }
+        else{
+            auto trade_player = trade_players[player_choice-1];
+
+            cout << "Your resources:" <<endl;
+            player->showCards();
+            cout << trade_player->getName() << " resources:" <<endl;
+            trade_player->showCards();
+
+            int take = displayMenu("What resource do you want?", RESOURCES_STR);
+            resource_take = RESOURCES[take];
+            cout << "How much do you need?" << endl;
+            int amount_take;
+            cin >> amount_take;
+            if (trade_player->getResourceCount(resource_take) < amount_take){
+                cout << "Trade fail, " << trade_player->getName() << " dont have this resource left." << endl;
+
+            }else{
+                int give = displayMenu("What resource can you give in return?", RESOURCES_STR);
+                resource_give = RESOURCES[give];
+                cout << "And how much would you give?" << endl;
+                int amount_give;
+                cin >> amount_give;
+                if(resources_cards[resource_give] < amount_give){
+                    cout << "Trade fail, you dont have this resource left." << endl;
+                }else{
+                    player->addResourceCard(resource_take, amount_take);
+                    player->loseResourceCard(resource_give, amount_give);
+                    trade_player->addResourceCard(resource_give, amount_give);
+                    trade_player->loseResourceCard(resource_take, amount_take);
+                    cout << "Your resources:" <<endl;
+                    player->showCards();
+                    cout << trade_player->getName() << " resources:" <<endl;
+                    trade_player->showCards();
+                }
+            }
+        }
+
 
     }
-void Game::chooseResourceTrade(const shared_ptr<Player> &player){
-    int take = displayMenu(
-            "Choose a resource to get from deck",
-            {
-                    "Wood",
-                    "Wheat",
-                    "Brick",
-                    "Sheep",
-                    "Ore",
-                    "Cancel"
-            });
-    int give = displayMenu(
-            "Choose a resource to lose",
-            {
-                    "Wood",
-                    "Wheat",
-                    "Brick",
-                    "Sheep",
-                    "Ore",
-                    "Cancel"
-            });
-    switch (take) {
-        case -1:
-            return;
-        case 0:
-
-            break;
-        case 1:
-
-            break;
-        case 2:
-
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-    }
-    }
-    bool Game::chooseWhatToDo(const shared_ptr<Player> &player) {
+    bool Game::actionMenu(const shared_ptr<Player> &player) {
         int option = displayMenu(
                 "What's your next move, brave settler?",
                 {
@@ -299,8 +304,6 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
                         "Show board",
                         "Build something (road/settlement/city) ⚒\uFE0F",
                         "Trade",
-                        "Buy Dev Card",
-                        "Use a Dev Card",
                         "End your turn "
                 });
         bool resume = true;
@@ -315,19 +318,10 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
                 cout << board << endl;
                 break;
             case 2:
-                chooseWhatToBuild(player);
+                buildMenu(player);
                 break;
             case 3:
-                // TODO method to trade
-                break;
-            case 4:
-                //TODO check if player has enough resource cards
-                if (buyDevelopmentCard() != 0) {
-                    cout << "Sorry no more development cards or no money" << endl;
-                }
-                break;
-            case 5:
-                //TODO check if it's cards are useful
+                tradeMenu(player);
                 break;
             default:
                 cout << "Invalid choice." << endl;
@@ -347,14 +341,24 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
 
         bool resume = true;
         while (resume) {
-            resume = chooseWhatToDo(player);
+            resume = actionMenu(player);
         }
     }
 
     void Game::endTurn() {
-        cout << "You have " << getCurrentPlayer()->getScore() << " points" << endl;
-        isGameOver();
         currentPlayerIndex = (currentPlayerIndex + 1) % int(players.size());
+    }
+
+    int Game::getPlayerWithLongestRoad() const {
+        int longest_road = 0;
+        shared_ptr<Player> longest_road_player;
+        for(const auto& p: players){
+            if (p->getNumberOfRoads() > longest_road){
+                longest_road_player = p;
+                longest_road = p->getNumberOfRoads();
+            }
+        }
+        return longest_road_player->getId();
     }
 
     const shared_ptr<Player> &Game::getCurrentPlayer() const {
@@ -365,7 +369,6 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
         int roll1 = rand() % 6 + 1;
         int roll2 = rand() % 6 + 1;
         int totalRoll = roll1 + roll2;
-        if (totalRoll == 7) totalRoll++; // TODO remove this line
         cout << endl << "You rolled " << totalRoll << "!" << endl;
         if (totalRoll == 7) {
             ROBBER();
@@ -374,11 +377,6 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
             DICE();
             distributeResources(totalRoll);
         }
-    }
-
-
-    void Game::tradeResources(int fromPlayerId, int toPlayerId, Resource give, Resource receive) {
-        // Logic to trade resources between players
     }
 
     int Game::buyDevelopmentCard() {
@@ -470,7 +468,7 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
         }
     }
 
-    bool Game::canBuildSettlement(int playerId, int nodeId) {
+    bool Game::canBuildSettlement(int nodeId) {
         const auto &node = model::Board::getNode(nodeId);
 
         if (!node->isAvailable()) {
@@ -575,17 +573,14 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
         cout << "Player: " << p->getName() << " choose a node for your settlement" << endl;
         int n;
         cin >> n;
-        int a = 1;
-        while (n < 0 || n > 53 || !canBuildSettlement(indx, n)) {
-            if (!canBuildSettlement(indx, n)) {
+        while (n < 0 || n > 53 || !canBuildSettlement(n)) {
+            if (!canBuildSettlement(n)) {
                 cout << "Node " << n << " is occupied or blocked. Try again" << endl;
             } else {
                 cout << "Invalid choice. Please Enter a number between 0 to 53" << endl;
             }
             cin >> n;
         }
-
-        // TODO check is available & distance
         auto s = model::Board::getNode(n);
         blockAdjNodes(s);
         p->addSettlement(s);
@@ -635,7 +630,6 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
         auto p = getCurrentPlayer();
         std::set<shared_ptr<Road>> can_build;
         for (const auto &road: p->getPlayerRoads()) {
-            // TODO get nodes by road and not by node. example if u have edge 22 you can build 14, 18, 31, 27
             auto adj_roads = model::Board::getAvailableAdjacentRoads(road);
             for (const auto &n: adj_roads) {
                 can_build.insert(n);
@@ -665,10 +659,4 @@ void Game::chooseResourceTrade(const shared_ptr<Player> &player){
             }
         }
     }
-
-    void Game::tradeWithDeck(shared_ptr<Player> &player) {
-
-    }
-
-
 }
