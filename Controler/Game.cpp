@@ -127,16 +127,14 @@ namespace model {
             }
             edges_str.push_back("Cancel.");
 
-            int user_choice = displayMenu("Which road would you like to build?", edges_str); // TODO change options after buy
+            int user_choice = displayMenu("Which road would you like to build?", edges_str);
             if(user_choice == -1) return;
 
-            if (user_choice < edges_str.size()) {
-                auto r = board.getRoad(edges[user_choice]->getId());
-                player->addRoad(r);
-                std::cout << "Congratulations! You have built road -- " << r->getId() << " -- !." << std::endl;
+            auto r = board.getRoad(edges[user_choice]->getId());
+            player->addRoad(r);
+            std::cout << "Congratulations! You have built road -- " << r->getId() << " -- !." << std::endl;
 
-                payForPurchase(ROAD_COST, player);
-            }
+            payForPurchase(ROAD_COST, player);
         } else {
             cout << "You do not have enough resources." << endl;
         }
@@ -149,28 +147,53 @@ namespace model {
         }
     }
 
-    void Game::tryBuildSettlement(const shared_ptr<Player> &player) const {
+    void Game::settlementBuildMenu(const shared_ptr<Player> &player){
+        vector<string> nodes_str;
+
         if (player->hasResourcesForNewSettlement()) {
-            cout << "choose your new settlement" << endl;
             vector<shared_ptr<Node>> available_nodes = availableSettlementToBuild();
-            int node_index = -1;
-            printAvailableNodes(available_nodes);
-            node_index = getUserChoice(available_nodes.size());;
-            player->addSettlement(Board::getNode(node_index));
+            for (const auto &n: available_nodes) {
+                nodes_str.push_back("Node-" + to_string(n->getId()));
+            }
+            nodes_str.push_back("Cancel.");
+            int user_choice = displayMenu("Which settlement would you like to build?", nodes_str);
+            if(user_choice == -1) return;
+
+            auto n = board.getNode(available_nodes[user_choice]->getId());
+            player->addSettlement(n);
+            std::cout << "Congratulations! You have built a new Settlement -- " << n->getId() << " -- !." << std::endl;
+
+            payForPurchase(SETTLEMENT_COST, player);
         } else {
             cout << "You do not have enough resources." << endl;
         }
     }
-
+    bool Game::canSettlementBeBuilt(const shared_ptr<Node> &node) const {
+        if (node->isAvailable()){
+            for(auto &r: board.getAdjacentRoads(node))
+            {
+                if (!r->getOtherNode(node)->isAvailable())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
     vector<shared_ptr<Node>> Game::availableSettlementToBuild() const {
         auto p = getCurrentPlayer();
+        std::set<shared_ptr<Node>> candidates = {};
         vector<shared_ptr<Node>> can_build;
         for (const auto &road: p->getPlayerRoads()) {
-            for (int i = 1; i < 3; ++i) {
-                auto node_i = road->getNodeOfRoad(i);
-                if (node_i->isAvailable()) {
-                    can_build.push_back(node_i);
-                }
+            for (const auto& node: road->getNodes()) {
+                candidates.insert(node);
+            }
+        }
+        for(const auto& node: candidates)
+        {
+            if (canSettlementBeBuilt(node)) {
+                can_build.push_back(node);
             }
         }
         return can_build;
@@ -194,7 +217,7 @@ namespace model {
                 roadBuildMenu(player);
                 break;
             case 1: // SETTLEMENT
-                tryBuildSettlement(player);
+                settlementBuildMenu(player);
                 break;
             case 2:
                 cout << "Implement here" << endl;
@@ -410,6 +433,7 @@ namespace model {
         p->addRoad(board.getRoad(43));
         p->addRoad(board.getRoad(50));
         p->addRoad(board.getRoad(45));
+        p->addRoad(board.getRoad(42));
         p->addRoad(board.getRoad(38));
         p->addRoad(board.getRoad(53));
         p->addResourceCard(Resource::Wood);

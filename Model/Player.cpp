@@ -77,9 +77,9 @@ namespace model {
 #pragma ide diagnostic ignored "readability-use-falloff"
     bool Player::hasAdjacentRoad(int node_id) {
         for (auto &road: roads) {
-            if (road->getNodeOfRoad(1)->getId() == node_id) {
+            if (road->getNode(1)->getId() == node_id) {
                 return true;
-            } else if (road->getNodeOfRoad(2)->getId() == node_id) {
+            } else if (road->getNode(2)->getId() == node_id) {
                 return true;
             }
         }

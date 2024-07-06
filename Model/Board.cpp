@@ -272,10 +272,10 @@ namespace model {
         std::unordered_set<std::shared_ptr<Node>> adjacentNodes;
 
         for (const auto& road : roads) {
-            if (road->getNodeOfRoad(1) == node) {
-                adjacentNodes.insert(road->getNodeOfRoad(2));
-            } else if (road->getNodeOfRoad(2) == node) {
-                adjacentNodes.insert(road->getNodeOfRoad(1));
+            if (road->getNode(1) == node) {
+                adjacentNodes.insert(road->getNode(2));
+            } else if (road->getNode(2) == node) {
+                adjacentNodes.insert(road->getNode(1));
             }
         }
 
@@ -287,13 +287,13 @@ namespace model {
         std::unordered_set<std::shared_ptr<Node>> adjacentNodes;
 
         for (const auto& road : roads) {
-            if (road->getNodeOfRoad(1) == node) {
-                auto temp = road->getNodeOfRoad(2);
+            if (road->getNode(1) == node) {
+                auto temp = road->getNode(2);
                 if(!temp->isAvailable()){
                     adjacentNodes.insert(temp);
                 }
-            } else if (road->getNodeOfRoad(2) == node) {
-                auto temp = road->getNodeOfRoad(1);
+            } else if (road->getNode(2) == node) {
+                auto temp = road->getNode(1);
                 if(!temp->isAvailable()){
                     adjacentNodes.insert(temp);
                 }
@@ -307,7 +307,7 @@ namespace model {
     vector<shared_ptr<Road>> Board::getAdjacentRoads(const shared_ptr<Road> &road){
         vector<shared_ptr<Road>> adj_roads;
         for (int i = 0; i < 2; ++i) {
-            for (const auto& r: getAdjacentRoads(road->getNodeOfRoad(i+1))){
+            for (const auto& r: getAdjacentRoads(road->getNode(i + 1))){
                 if(r->getId() != road->getId()) adj_roads.push_back(r);
             }
         }

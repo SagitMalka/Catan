@@ -2,6 +2,7 @@
 #include "Road.hpp"
 
 #include <utility>
+#include <array>
 
 namespace model {
     Road::Road(int id) : id(id), owner_id(-1) {}
@@ -40,11 +41,27 @@ namespace model {
         return owner_id;
     }
 
-    std::shared_ptr<Node> Road::getNodeOfRoad(int index) {
+    std::shared_ptr<Node> Road::getNode(int index) {
         if(index == 2){
             return node2;
         }
         return node1;
+    }
+
+    std::array<std::shared_ptr<Node>, 2> Road::getNodes() {
+        std::array<std::shared_ptr<Node>, 2> nodes{{node1, node2}};
+        return nodes;
+    }
+
+    std::shared_ptr<Node> Road::getOtherNode(const std::shared_ptr<Node> &node) {
+        if(node->getId() == node1->getId() || node->getId() == node2->getId()) {
+            if (node->getId() == node1->getId())
+                return node2;
+            else if (node->getId() == node2->getId())
+                return node1;
+        }else {
+            throw std::runtime_error("Tried to get other node of a node that does not belong to road.");
+        }
     }
 
     std::ostream &operator<<(std::ostream &os, const Road &road) {

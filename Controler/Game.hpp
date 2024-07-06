@@ -67,7 +67,7 @@ namespace model {
 
         void roadBuildMenu(const shared_ptr<Player> &player);
 
-        void tryBuildSettlement(const shared_ptr<Player> &player) const;
+        void settlementBuildMenu(const shared_ptr<Player> &player);
 
         static void printAvailableNodes(vector<shared_ptr<Node>> &node_list);
 
@@ -82,6 +82,8 @@ namespace model {
         void changeCounter(Resource r, int amount);
 
         void payForPurchase(std::map<Resource, int> price, const shared_ptr<Player> &player);
+
+        bool canSettlementBeBuilt(const shared_ptr<Node> &node) const;
     };
 
 }
